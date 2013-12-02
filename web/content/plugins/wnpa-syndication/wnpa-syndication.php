@@ -7,3 +7,5 @@
  * Version 0.1
  * Author URI: http://web.wsu.edu
  */
+
+include( dirname( __FILE__ ) . '/includes/class-wnpa-feed-item.php' );
