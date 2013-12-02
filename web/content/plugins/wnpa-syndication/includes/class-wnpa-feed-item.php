@@ -39,7 +39,7 @@ class WNPA_Feed_Item {
 			'query_var'          => true,
 			'rewrite'            => array( 'slug' => 'feed-item' ),
 			'capability_type'    => 'post',
-			'has_archive'        => true,
+			'has_archive'        => 'feed-items',
 			'hierarchical'       => false,
 			'supports'           => array( 'title', 'editor', 'author', 'thumbnail', 'excerpt' ),
 		);
