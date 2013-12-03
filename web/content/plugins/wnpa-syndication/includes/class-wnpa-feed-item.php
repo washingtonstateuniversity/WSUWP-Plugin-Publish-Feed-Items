@@ -8,6 +8,7 @@ class WNPA_Feed_Item {
 
 	public function __construct() {
 		add_action( 'init', array( $this, 'register_post_type' ), 10 );
+		add_action( 'init', array( $this, 'register_taxonomy_visibility' ), 10 );
 	}
 
 	/**
@@ -45,6 +46,30 @@ class WNPA_Feed_Item {
 		);
 
 		register_post_type( 'wnpa_feed_item', $args );
+	}
+
+	/**
+	 * Register the taxonomy controlling the visibility of a feed item.
+	 */
+	public function register_taxonomy_visibility() {
+		$labels = array(
+			'name'              => 'Visibility',
+			'search_items'      => 'Search Visibility',
+			'all_items'         => 'All Visibilities',
+			'edit_item'         => 'Edit Visibility',
+			'update_item'       => 'Update Visibility',
+			'add_new_item'      => 'Add New Visibility',
+			'new_item_name'     => 'New Visibility Name',
+		);
+
+		$args = array(
+			'hierarchical'      => true,
+			'labels'            => $labels,
+			'show_ui'           => true,
+			'query_var'         => true,
+			'rewrite'           => array( 'slug' => 'visibility' ),
+		);
+		register_taxonomy( 'wnpa_item_visibility', array( 'wnpa_feed_item' ), $args );
 	}
 }
 global $wnpa_feed_item;
