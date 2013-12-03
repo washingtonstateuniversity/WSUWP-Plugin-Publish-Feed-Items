@@ -7,8 +7,9 @@
 class WNPA_Feed_Item {
 
 	public function __construct() {
-		add_action( 'init', array( $this, 'register_post_type' ), 10 );
-		add_action( 'init', array( $this, 'register_taxonomy_visibility' ), 10 );
+		add_action( 'init',      array( $this, 'register_post_type'           ), 10 );
+		add_action( 'init',      array( $this, 'register_taxonomy_visibility' ), 10 );
+		add_action( 'rss2_item', array( $this, 'rss_item_visibility'          ), 10 );
 	}
 
 	/**
@@ -71,6 +72,15 @@ class WNPA_Feed_Item {
 			'rewrite'           => array( 'slug' => 'visibility' ),
 		);
 		register_taxonomy( 'wnpa_item_visibility', array( 'wnpa_feed_item' ), $args );
+	}
+
+	/**
+	 * Output a field in the RSS feed indicating the visibility of each
+	 * individual item. Uses the accessRights term available through the
+	 * Dublin Core namespace.
+	 */
+	public function rss_item_visibility() {
+		?><dc:accessRights>public</dc:accessRights><?php
 	}
 }
 global $wnpa_feed_item;
