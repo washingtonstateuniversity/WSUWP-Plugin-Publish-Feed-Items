@@ -15,13 +15,24 @@ class WNPA_Access_Key {
 		if ( ! IS_PROFILE_PAGE ) {
 			return;
 		}
+
+		$access_key = get_user_meta( get_current_user_id(), '_wnpa_access_key', true );
+		$feed_url = 'http://wnpa.wsu.edu/feed-items/feed/';
+
+		if ( empty( $access_key ) ) {
+			$access_key = '';
+		} else {
+			$access_key = sanitize_key( $access_key );
+			$feed_url .= '?acess_key=' . esc_html( $access_key );
+		}
+
 		?>
 		<h3>WNPA Access Information:</h3>
 		<table class="form-table">
 			<tr>
 				<th><label for="access-key">Access Key</label></th>
 				<td>
-					<input readonly type=""text" class="regular-text" size="24" value="abcdefghijklmnopqrstuvwxyz1234567890" \><span class="button button-large">Generate</span>
+					<input readonly type=""text" class="regular-text" size="24" value="<?php echo esc_attr( $access_key ); ?>" \><span class="button button-large">Generate</span>
 					<br />
 					<span class="description">This access key can be used to access both public and private items in the feeds offered through the WNPA site. Use the generate button to create a new key.</span>
 				</td>
@@ -29,7 +40,7 @@ class WNPA_Access_Key {
 			<tr>
 				<th><label for="access-url">Feed URL</label></th>
 				<td>
-					<a href="">http://wnpa.wsu.edu/feed-items/feed/?access_key=abcdefghijklmnopqrstuvwxyz1234567890</a>
+					<a href="<?php echo esc_url( $feed_url ); ?>"><?php echo esc_url( $feed_url ); ?></a>
 				</td>
 			</tr>
 		</table><?php
