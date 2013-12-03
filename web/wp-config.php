@@ -82,10 +82,6 @@ define('WPLANG', '');
  */
 define('WP_DEBUG', true);
 
-define( 'WP_HOME', 'http://wnpa.wsu.edu' );
-// WordPress URL (http://mydomain.com);
-define( 'WP_SITEURL', 'http://wnpa.wsu.edu' );
-
 /* That's all, stop editing! Happy blogging. */
 
 /** Absolute path to the WordPress directory. */
