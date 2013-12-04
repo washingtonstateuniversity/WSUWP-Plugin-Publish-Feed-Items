@@ -91,6 +91,8 @@ class WNPA_Feed_Item {
 
 		if ( empty( $visibility_terms ) ) {
 			$visibility = 'public';
+		} else {
+			$visibility = $visibility_terms[0]->slug;
 		}
 
 		?>	<dc:accessRights><?php echo esc_html( $visibility ); ?></dc:accessRights><?php
