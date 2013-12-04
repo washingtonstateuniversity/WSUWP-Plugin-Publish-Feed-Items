@@ -21,6 +21,7 @@
 	 * @param response
 	 */
 	function handle_response( response ) {
+		$( '#wnpa-access-key' ).val( response );
 	}
 
 	$( '#wnpa-generate-key' ).on( 'click', generate_access_key );
