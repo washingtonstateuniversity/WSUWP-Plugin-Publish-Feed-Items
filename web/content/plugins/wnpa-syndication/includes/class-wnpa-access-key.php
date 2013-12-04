@@ -7,6 +7,11 @@
  */
 class WNPA_Access_Key {
 
+	/**
+	 * @var string The meta key used in user meta for the access key.
+	 */
+	var $access_key_meta = '_wnpa_access_key';
+
 	public function __construct() {
 		add_action( 'show_user_profile', array( $this, 'user_profile_show_key' ), 10 );
 		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ), 10 );
@@ -47,7 +52,7 @@ class WNPA_Access_Key {
 			return;
 		}
 
-		$access_key = get_user_meta( get_current_user_id(), '_wnpa_access_key', true );
+		$access_key = get_user_meta( get_current_user_id(), $this->access_key_meta, true );
 		$feed_url = 'http://wnpa.wsu.edu/feed-items/feed/';
 
 		if ( empty( $access_key ) ) {
@@ -89,7 +94,7 @@ class WNPA_Access_Key {
 		}
 
 		$access_key = sanitize_key( $_POST['access_key'] );
-		update_user_meta( $user_id, '_wnpa_access_key', $access_key );
+		update_user_meta( $user_id, $this->access_key_meta, $access_key );
 	}
 }
 global $wnpa_access_key;
