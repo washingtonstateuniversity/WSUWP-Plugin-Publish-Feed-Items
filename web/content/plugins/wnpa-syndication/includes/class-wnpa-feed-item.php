@@ -6,10 +6,32 @@
  */
 class WNPA_Feed_Item {
 
+	/**
+	 * @var string Slug used for the visibility taxonomy.
+	 */
+	var $item_visibility_taxonomy = 'wnpa_item_visibility';
+
 	public function __construct() {
 		add_action( 'init',      array( $this, 'register_post_type'           ), 10 );
 		add_action( 'init',      array( $this, 'register_taxonomy_visibility' ), 10 );
 		add_action( 'rss2_item', array( $this, 'rss_item_visibility'          ), 10 );
+		add_filter( 'wp_dropdown_cats', array( $this, 'selective_taxonomy_dropdown' ), 10, 1 );
+	}
+
+	/**
+	 * Don't display a parent taxonomy selection drop down when dealing with the
+	 * visibility taxonomy.
+	 *
+	 * @param string $output Current output for dropndown taxonomy list.
+	 *
+	 * @return string Modified output for dropdown taxonomy list.
+	 */
+	public function selective_taxonomy_dropdown( $output ) {
+		if ( 'wnpa_feed_item' !== get_current_screen()->id ) {
+			return $output;
+		}
+
+		return '';
 	}
 
 	/**
@@ -66,12 +88,11 @@ class WNPA_Feed_Item {
 		$args = array(
 			'hierarchical'      => true,
 			'labels'            => $labels,
-			'show_ui'           => false,
-			'show_admin_ui'     => false,
+			'show_ui'           => true,
 			'query_var'         => true,
 			'rewrite'           => array( 'slug' => 'visibility' ),
 		);
-		register_taxonomy( 'wnpa_item_visibility', array( 'wnpa_feed_item' ), $args );
+		register_taxonomy( $this->item_visibility_taxonomy, array( 'wnpa_feed_item' ), $args );
 	}
 
 	/**
@@ -80,7 +101,17 @@ class WNPA_Feed_Item {
 	 * Dublin Core namespace.
 	 */
 	public function rss_item_visibility() {
-		?><dc:accessRights>public</dc:accessRights><?php
+		global $post;
+
+		$visibility_terms = wp_get_object_terms( $post->ID, $this->item_visibility_taxonomy );
+
+		if ( empty( $visibility_terms ) ) {
+			$visibility = 'public';
+		} else {
+			$visibility = $visibility_terms[0]->slug;
+		}
+
+		?>	<dc:accessRights><?php echo esc_html( $visibility ); ?></dc:accessRights><?php
 	}
 }
 global $wnpa_feed_item;
