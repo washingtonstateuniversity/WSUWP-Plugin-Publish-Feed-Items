@@ -13,10 +13,10 @@ class WNPA_Access_Key {
 	var $access_key_meta = '_wnpa_access_key';
 
 	public function __construct() {
-		add_action( 'show_user_profile', array( $this, 'user_profile_show_key' ), 10 );
-		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ), 10 );
-		add_action( 'wp_ajax_wnpa_generate_access_key', array( $this, 'generate_access_key' ), 10 );
-		add_action( 'personal_options_update', array( $this, 'update_profile' ), 10, 1 );
+		add_action( 'show_user_profile',                array( $this, 'user_profile_show_key' ), 10    );
+		add_action( 'admin_enqueue_scripts',            array( $this, 'admin_enqueue_scripts' ), 10    );
+		add_action( 'wp_ajax_wnpa_generate_access_key', array( $this, 'generate_access_key'   ), 10    );
+		add_action( 'personal_options_update',          array( $this, 'update_profile'        ), 10, 1 );
 	}
 
 	/**
