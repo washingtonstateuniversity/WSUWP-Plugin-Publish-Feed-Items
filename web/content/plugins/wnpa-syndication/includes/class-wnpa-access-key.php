@@ -29,6 +29,7 @@ class WNPA_Access_Key {
 		}
 
 		wp_enqueue_script( 'wnpa-admin', plugins_url( '/wnpa-syndication/js/wnpa-admin.js' ), array( 'jquery' ), false, true );
+		// Make wnpa_admin.nonce available to the wnpa-admin.js file
 		wp_localize_script( 'wnpa-admin', 'wnpa_admin', array( 'nonce' => wp_create_nonce( 'generate-access-key' ) ) );
 	}
 
