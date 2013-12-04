@@ -15,6 +15,23 @@ class WNPA_Feed_Item {
 		add_action( 'init',      array( $this, 'register_post_type'           ), 10 );
 		add_action( 'init',      array( $this, 'register_taxonomy_visibility' ), 10 );
 		add_action( 'rss2_item', array( $this, 'rss_item_visibility'          ), 10 );
+		add_filter( 'wp_dropdown_cats', array( $this, 'selective_taxonomy_dropdown' ), 10, 1 );
+	}
+
+	/**
+	 * Don't display a parent taxonomy selection drop down when dealing with the
+	 * visibility taxonomy.
+	 *
+	 * @param string $output Current output for dropndown taxonomy list.
+	 *
+	 * @return string Modified output for dropdown taxonomy list.
+	 */
+	public function selective_taxonomy_dropdown( $output ) {
+		if ( 'wnpa_feed_item' !== get_current_screen()->id ) {
+			return $output;
+		}
+
+		return '';
 	}
 
 	/**
