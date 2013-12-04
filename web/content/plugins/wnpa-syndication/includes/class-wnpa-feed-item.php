@@ -85,7 +85,15 @@ class WNPA_Feed_Item {
 	 * Dublin Core namespace.
 	 */
 	public function rss_item_visibility() {
-		?><dc:accessRights>public</dc:accessRights><?php
+		global $post;
+
+		$visibility_terms = wp_get_object_terms( $post->ID, $this->item_visibility_taxonomy );
+
+		if ( empty( $visibility_terms ) ) {
+			$visibility = 'public';
+		}
+
+		?><dc:accessRights><?php echo esc_html( $visibility ); ?></dc:accessRights><?php
 	}
 }
 global $wnpa_feed_item;
