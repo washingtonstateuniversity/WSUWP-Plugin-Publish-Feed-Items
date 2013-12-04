@@ -11,6 +11,7 @@ class WNPA_Access_Key {
 		add_action( 'show_user_profile', array( $this, 'user_profile_show_key' ), 10 );
 		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ), 10 );
 		add_action( 'wp_ajax_wnpa_generate_access_key', array( $this, 'generate_access_key' ), 10 );
+		add_action( 'personal_options_update', array( $this, 'update_profile' ), 10, 1 );
 	}
 
 	public function admin_enqueue_scripts() {
@@ -67,6 +68,20 @@ class WNPA_Access_Key {
 				</td>
 			</tr>
 		</table><?php
+	}
+
+	/**
+	 * Capture custom user meta information that we've added to the user's profile page.
+	 *
+	 * @param int $user_id User ID of the profile being updated.
+	 */
+	public function update_profile( $user_id ) {
+		if ( empty( $_POST['access_key'] ) ) {
+			return;
+		}
+
+		$access_key = sanitize_key( $_POST['access_key'] );
+		update_user_meta( $user_id, '_wnpa_access_key', $access_key );
 	}
 }
 global $wnpa_access_key;
