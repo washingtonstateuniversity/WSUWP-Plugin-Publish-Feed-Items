@@ -10,6 +10,7 @@ class WNPA_Access_Key {
 	public function __construct() {
 		add_action( 'show_user_profile', array( $this, 'user_profile_show_key' ), 10 );
 		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ), 10 );
+		add_action( 'wp_ajax_wnpa_generate_access_key', array( $this, 'generate_access_key' ), 10 );
 	}
 
 	public function admin_enqueue_scripts() {
@@ -19,6 +20,16 @@ class WNPA_Access_Key {
 
 		wp_enqueue_script( 'wnpa-admin', plugins_url( '/wnpa-syndication/js/wnpa-admin.js' ), array( 'jquery' ), false, true );
 	}
+
+	/**
+	 * Generate an MD5 hash to be used as a unique access key for the
+	 * requesting user.
+	 */
+	public function generate_access_key() {
+		echo md5( 'wnpa' . time() . get_current_user_id() );
+		exit;
+	}
+
 	public function user_profile_show_key() {
 		if ( ! IS_PROFILE_PAGE ) {
 			return;
