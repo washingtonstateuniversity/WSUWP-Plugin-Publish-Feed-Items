@@ -19,6 +19,7 @@ class WNPA_Access_Key {
 		}
 
 		wp_enqueue_script( 'wnpa-admin', plugins_url( '/wnpa-syndication/js/wnpa-admin.js' ), array( 'jquery' ), false, true );
+		wp_localize_script( 'wnpa-admin', 'wnpa_admin', array( 'nonce' => wp_create_nonce( 'generate-access-key' ) ) );
 	}
 
 	/**
@@ -26,6 +27,8 @@ class WNPA_Access_Key {
 	 * requesting user.
 	 */
 	public function generate_access_key() {
+		check_ajax_referer( 'generate-access-key' );
+
 		echo md5( 'wnpa' . time() . get_current_user_id() );
 		exit;
 	}

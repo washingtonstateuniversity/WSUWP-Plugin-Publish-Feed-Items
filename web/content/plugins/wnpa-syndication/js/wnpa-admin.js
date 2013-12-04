@@ -1,5 +1,13 @@
 (function( window, $ ) {
 	/**
+	 * Capture the nonce generated and passed as an object
+	 * in the HTML document.
+	 *
+	 * @type string
+	 */
+	var nonce = window.wnpa_admin.nonce;
+
+	/**
 	 * Make an Ajax request to generate an access key for use in
 	 * the initiating user's profile.
 	 *
@@ -9,7 +17,8 @@
 		e.preventDefault();
 
 		var data = {
-			action: 'wnpa_generate_access_key'
+			action: 'wnpa_generate_access_key',
+			_ajax_nonce: nonce
 		};
 
 		$.post( ajaxurl, data, handle_response );
