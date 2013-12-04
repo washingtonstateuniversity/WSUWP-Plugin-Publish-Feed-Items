@@ -46,7 +46,7 @@ class WNPA_Access_Key {
 			$access_key = '';
 		} else {
 			$access_key = sanitize_key( $access_key );
-			$feed_url .= '?acess_key=' . esc_html( $access_key );
+			$feed_url .= '?access_key=' . esc_html( $access_key );
 		}
 
 		?>
