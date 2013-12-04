@@ -16,12 +16,16 @@
 	}
 
 	/**
-	 * Handle the response received from WordPress
+	 * Handle the response received from WordPress. Ensure that the
+	 * response is alphanumeric (MD5 string) before transferring it
+	 * to the DOM.
 	 *
-	 * @param response
+	 * @param response An MD5 string to become the user's access key.
 	 */
 	function handle_response( response ) {
-		$( '#wnpa-access-key' ).val( response );
+		if ( response.match( /^[0-9a-z]+$/ ) ) {
+			$( '#wnpa-access-key' ).val( response );
+		}
 	}
 
 	$( '#wnpa-generate-key' ).on( 'click', generate_access_key );
