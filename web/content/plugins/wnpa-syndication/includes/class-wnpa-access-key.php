@@ -14,6 +14,10 @@ class WNPA_Access_Key {
 		add_action( 'personal_options_update', array( $this, 'update_profile' ), 10, 1 );
 	}
 
+	/**
+	 * Enqueue the Javascript required to handle key generation on the
+	 * user's profile page.
+	 */
 	public function admin_enqueue_scripts() {
 		if ( 'profile' !== get_current_screen()->base ) {
 			return;
@@ -34,6 +38,10 @@ class WNPA_Access_Key {
 		exit;
 	}
 
+	/**
+	 * Show a section on the user's profile page for the WNPA Accees Key
+	 * and allow that key to be generated for future use.
+	 */
 	public function user_profile_show_key() {
 		if ( ! IS_PROFILE_PAGE ) {
 			return;
