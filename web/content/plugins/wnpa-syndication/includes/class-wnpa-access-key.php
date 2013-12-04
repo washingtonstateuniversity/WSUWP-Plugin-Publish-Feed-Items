@@ -56,7 +56,8 @@ class WNPA_Access_Key {
 				<td>
 					<input readonly type=""text" id="wnpa-access-key" class="regular-text" size="24" value="<?php echo esc_attr( $access_key ); ?>" \><span id="wnpa-generate-key" class="button button-large">Generate</span>
 					<br />
-					<span class="description">This access key can be used to access both public and private items in the feeds offered through the WNPA site. Use the generate button to create a new key.</span>
+					<span class="description">This key can be used to access both public and private items in the RSS feeds offered through the WNPA site.<br />
+						Use the generate button to create a new key and click <em>Update Profile</em> below to begin using it.</span>
 				</td>
 			</tr>
 			<tr>
