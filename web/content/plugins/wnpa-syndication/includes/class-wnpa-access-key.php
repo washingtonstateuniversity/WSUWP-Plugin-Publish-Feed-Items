@@ -46,6 +46,8 @@ class WNPA_Access_Key {
 	/**
 	 * Show a section on the user's profile page for the WNPA Accees Key
 	 * and allow that key to be generated for future use.
+	 *
+	 * @todo $feed_url should be handled in a more dynamic way - possibly options
 	 */
 	public function user_profile_show_key() {
 		if ( ! IS_PROFILE_PAGE ) {
