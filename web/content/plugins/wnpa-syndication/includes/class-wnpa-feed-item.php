@@ -6,6 +6,11 @@
  */
 class WNPA_Feed_Item {
 
+	/**
+	 * @var string Slug used for the visibility taxonomy.
+	 */
+	var $item_visibility_taxonomy = 'wnpa_item_visibility';
+
 	public function __construct() {
 		add_action( 'init',      array( $this, 'register_post_type'           ), 10 );
 		add_action( 'init',      array( $this, 'register_taxonomy_visibility' ), 10 );
@@ -71,7 +76,7 @@ class WNPA_Feed_Item {
 			'query_var'         => true,
 			'rewrite'           => array( 'slug' => 'visibility' ),
 		);
-		register_taxonomy( 'wnpa_item_visibility', array( 'wnpa_feed_item' ), $args );
+		register_taxonomy( $this->item_visibility_taxonomy, array( 'wnpa_feed_item' ), $args );
 	}
 
 	/**
