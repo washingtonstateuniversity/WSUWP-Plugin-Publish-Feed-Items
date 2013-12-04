@@ -93,7 +93,7 @@ class WNPA_Feed_Item {
 			$visibility = 'public';
 		}
 
-		?><dc:accessRights><?php echo esc_html( $visibility ); ?></dc:accessRights><?php
+		?>	<dc:accessRights><?php echo esc_html( $visibility ); ?></dc:accessRights><?php
 	}
 }
 global $wnpa_feed_item;
