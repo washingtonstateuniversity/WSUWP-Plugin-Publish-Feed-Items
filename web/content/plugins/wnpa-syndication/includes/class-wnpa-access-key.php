@@ -9,8 +9,16 @@ class WNPA_Access_Key {
 
 	public function __construct() {
 		add_action( 'show_user_profile', array( $this, 'user_profile_show_key' ), 10 );
+		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ), 10 );
 	}
 
+	public function admin_enqueue_scripts() {
+		if ( 'profile' !== get_current_screen()->base ) {
+			return;
+		}
+
+		wp_enqueue_script( 'wnpa-admin', plugins_url( '/wnpa-syndication/js/wnpa-admin.js' ), array( 'jquery' ), false, true );
+	}
 	public function user_profile_show_key() {
 		if ( ! IS_PROFILE_PAGE ) {
 			return;
