@@ -11,6 +11,11 @@ class WNPA_Feed_Item {
 	 */
 	var $item_visibility_taxonomy = 'wnpa_item_visibility';
 
+	/**
+	 * @var string Slug used for the feed item content type.
+	 */
+	var $item_content_type = 'wnpa_feed_item';
+
 	public function __construct() {
 		add_action( 'init',      array( $this, 'register_post_type'           ), 10 );
 		add_action( 'init',      array( $this, 'register_taxonomy_visibility' ), 10 );
@@ -27,7 +32,7 @@ class WNPA_Feed_Item {
 	 * @return string Modified output for dropdown taxonomy list.
 	 */
 	public function selective_taxonomy_dropdown( $output ) {
-		if ( 'wnpa_feed_item' !== get_current_screen()->id ) {
+		if ( $this->item_content_type !== get_current_screen()->id ) {
 			return $output;
 		}
 
@@ -68,7 +73,7 @@ class WNPA_Feed_Item {
 			'supports'           => array( 'title', 'editor', 'author', 'thumbnail', 'excerpt' ),
 		);
 
-		register_post_type( 'wnpa_feed_item', $args );
+		register_post_type( $this->item_content_type, $args );
 	}
 
 	/**
@@ -92,7 +97,7 @@ class WNPA_Feed_Item {
 			'query_var'         => true,
 			'rewrite'           => array( 'slug' => 'visibility' ),
 		);
-		register_taxonomy( $this->item_visibility_taxonomy, array( 'wnpa_feed_item' ), $args );
+		register_taxonomy( $this->item_visibility_taxonomy, array( $this->item_content_type ), $args );
 	}
 
 	/**
