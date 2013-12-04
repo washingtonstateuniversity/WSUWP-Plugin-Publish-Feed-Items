@@ -71,8 +71,7 @@ class WNPA_Feed_Item {
 		$args = array(
 			'hierarchical'      => true,
 			'labels'            => $labels,
-			'show_ui'           => false,
-			'show_admin_ui'     => false,
+			'show_ui'           => true,
 			'query_var'         => true,
 			'rewrite'           => array( 'slug' => 'visibility' ),
 		);
