@@ -47,8 +47,6 @@ class WNPA_Access_Key {
 	/**
 	 * Show a section on the user's profile page for the WNPA Accees Key
 	 * and allow that key to be generated for future use.
-	 *
-	 * @todo $feed_url should be handled in a more dynamic way - possibly options
 	 */
 	public function user_profile_show_key() {
 		if ( ! IS_PROFILE_PAGE ) {
@@ -56,13 +54,13 @@ class WNPA_Access_Key {
 		}
 
 		$access_key = get_user_meta( get_current_user_id(), $this->access_key_meta, true );
-		$feed_url = 'http://wnpa.wsu.edu/feed-items/feed/';
 
 		if ( empty( $access_key ) ) {
 			$access_key = '';
+			$feed_url = home_url( 'feed-items/feed/' );
 		} else {
 			$access_key = sanitize_key( $access_key );
-			$feed_url .= '?access_key=' . esc_html( $access_key );
+			$feed_url = home_url( 'feed-items/feed/?access_key=' . esc_html( $access_key ) );
 		}
 
 		?>
