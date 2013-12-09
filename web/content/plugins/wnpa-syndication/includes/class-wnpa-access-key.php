@@ -69,7 +69,7 @@ class WNPA_Access_Key {
 			<tr>
 				<th><label for="access_key">Access Key</label></th>
 				<td>
-					<input readonly type=""text" id="wnpa-access-key" class="regular-text" name="access_key" size="24" value="<?php echo esc_attr( $access_key ); ?>" \><span id="wnpa-generate-key" class="button button-large">Generate</span>
+					<input readonly="readonly" type="text" id="wnpa-access-key" class="regular-text" name="access_key" size="24" value="<?php echo esc_attr( $access_key ); ?>" \><span id="wnpa-generate-key" class="button button-large">Generate</span>
 					<br />
 					<span class="description">This key can be used to access both public and private items in the RSS feeds offered through the WNPA site.<br />
 						Use the generate button to create a new key and click <em>Update Profile</em> below to begin using it.</span>
