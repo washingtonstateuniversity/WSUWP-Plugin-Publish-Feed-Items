@@ -1,3 +1,5 @@
 web/content/uploads
+web/content/plugins/admin-color-schemes/
+web/content/themes/
 .DS_Store
 .idea
