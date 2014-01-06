@@ -130,7 +130,7 @@ class WNPA_Feed_Item {
 	 * @return WP_Query Modified query object.
 	 */
 	public function modify_feed_query( $query ) {
-		if ( $query->is_feed() && 'wnpa_feed_item' === $query->query_vars['post_type'] ) {
+		if ( $query->is_feed() && $this->item_content_type === $query->query_vars['post_type'] ) {
 
 			if ( isset( $query->query_vars['access_key'] ) ) {
 				// Look for a user matching the requested access key
