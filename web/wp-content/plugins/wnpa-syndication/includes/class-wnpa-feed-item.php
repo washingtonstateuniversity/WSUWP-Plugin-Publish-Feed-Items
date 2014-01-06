@@ -17,9 +17,11 @@ class WNPA_Feed_Item {
 	var $item_content_type = 'wnpa_feed_item';
 
 	public function __construct() {
-		add_action( 'init',      array( $this, 'register_post_type'           ), 10 );
-		add_action( 'init',      array( $this, 'register_taxonomy_visibility' ), 10 );
-		add_action( 'rss2_item', array( $this, 'rss_item_visibility'          ), 10 );
+		add_action( 'init',          array( $this, 'register_post_type'           ), 10 );
+		add_action( 'init',          array( $this, 'register_taxonomy_visibility' ), 10 );
+		add_action( 'rss2_item',     array( $this, 'rss_item_visibility'          ), 10 );
+		add_action( 'pre_get_posts', array( $this, 'modify_feed_query'            ), 10 );
+
 		add_filter( 'wp_dropdown_cats', array( $this, 'selective_taxonomy_dropdown' ), 10, 1 );
 	}
 
@@ -117,6 +119,29 @@ class WNPA_Feed_Item {
 		}
 
 		?>	<dc:accessRights><?php echo esc_html( $visibility ); ?></dc:accessRights><?php
+	}
+
+	/**
+	 * Modify the query object to include a taxonomy query for public items only if a valid
+	 * access key is not provided.
+	 *
+	 * @param WP_Query $query Current query object being processed.
+	 *
+	 * @return WP_Query Modified query object.
+	 */
+	public function modify_feed_query( $query ) {
+		if ( $query->is_feed() && 'wnpa_feed_item' === $query->query_vars['post_type'] ) {
+			$public_query = array(
+				array(
+					'taxonomy' => 'wnpa_item_visibility',
+					'field' => 'name',
+					'terms' => 'Public',
+				)
+			);
+
+			$query->set( 'tax_query', $public_query );
+			return $query;
+		}
 	}
 }
 global $wnpa_feed_item;
