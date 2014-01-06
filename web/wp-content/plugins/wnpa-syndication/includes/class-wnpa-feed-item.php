@@ -153,8 +153,9 @@ class WNPA_Feed_Item {
 			);
 
 			$query->set( 'tax_query', $public_query );
-			return;
 		}
+
+		return;
 	}
 }
 global $wnpa_feed_item;
