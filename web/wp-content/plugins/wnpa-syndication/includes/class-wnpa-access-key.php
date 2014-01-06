@@ -12,11 +12,18 @@ class WNPA_Access_Key {
 	 */
 	var $access_key_meta = '_wnpa_access_key';
 
+	/**
+	 * @var string The public query vary used to retrieve private items.
+	 */
+	var $query_var = 'access_key';
+
 	public function __construct() {
 		add_action( 'show_user_profile',                array( $this, 'user_profile_show_key' ), 10    );
 		add_action( 'admin_enqueue_scripts',            array( $this, 'admin_enqueue_scripts' ), 10    );
 		add_action( 'wp_ajax_wnpa_generate_access_key', array( $this, 'generate_access_key'   ), 10    );
 		add_action( 'personal_options_update',          array( $this, 'update_profile'        ), 10, 1 );
+
+		add_filter( 'query_vars',                       array( $this, 'filter_query_vars'  ), 10, 1 );
 	}
 
 	/**
@@ -54,13 +61,13 @@ class WNPA_Access_Key {
 		}
 
 		$access_key = get_user_meta( get_current_user_id(), $this->access_key_meta, true );
+		$feed_url = home_url( 'feed-items/feed/' );
 
 		if ( empty( $access_key ) ) {
 			$access_key = '';
-			$feed_url = home_url( 'feed-items/feed/' );
 		} else {
 			$access_key = sanitize_key( $access_key );
-			$feed_url = home_url( 'feed-items/feed/?access_key=' . esc_html( $access_key ) );
+			$feed_url = add_query_arg( $this->query_var, $access_key, $feed_url );
 		}
 
 		?>
@@ -96,6 +103,19 @@ class WNPA_Access_Key {
 
 		$access_key = sanitize_key( $_POST['access_key'] );
 		update_user_meta( $user_id, $this->access_key_meta, $access_key );
+	}
+
+	/**
+	 * Filter public query vars to include the access key required for private feed items.
+	 *
+	 * @param array $query_vars Existing public query vars.
+	 *
+	 * @return array Modified public query vars.
+	 */
+	public function filter_query_vars( $query_vars ) {
+		$query_vars[] = $this->query_var;
+
+		return $query_vars;
 	}
 }
 global $wnpa_access_key;

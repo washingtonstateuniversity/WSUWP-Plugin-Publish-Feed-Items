@@ -17,9 +17,11 @@ class WNPA_Feed_Item {
 	var $item_content_type = 'wnpa_feed_item';
 
 	public function __construct() {
-		add_action( 'init',      array( $this, 'register_post_type'           ), 10 );
-		add_action( 'init',      array( $this, 'register_taxonomy_visibility' ), 10 );
-		add_action( 'rss2_item', array( $this, 'rss_item_visibility'          ), 10 );
+		add_action( 'init',          array( $this, 'register_post_type'           ), 10 );
+		add_action( 'init',          array( $this, 'register_taxonomy_visibility' ), 10 );
+		add_action( 'rss2_item',     array( $this, 'rss_item_visibility'          ), 10 );
+		add_action( 'pre_get_posts', array( $this, 'modify_feed_query'            ), 10 );
+
 		add_filter( 'wp_dropdown_cats', array( $this, 'selective_taxonomy_dropdown' ), 10, 1 );
 	}
 
@@ -117,6 +119,45 @@ class WNPA_Feed_Item {
 		}
 
 		?>	<dc:accessRights><?php echo esc_html( $visibility ); ?></dc:accessRights><?php
+	}
+
+	/**
+	 * Modify the query object to include a taxonomy query for public items only if a valid
+	 * access key is not provided.
+	 *
+	 * @param WP_Query $query Current query object being processed.
+	 *
+	 * @return WP_Query Modified query object.
+	 */
+	public function modify_feed_query( $query ) {
+		if ( $query->is_feed() && $this->item_content_type === $query->query_vars['post_type'] ) {
+
+			if ( isset( $query->query_vars['access_key'] ) ) {
+				// Look for a user matching the requested access key
+				$meta_query = array(
+					'meta_key' => '_wnpa_access_key',
+					'meta_value' => $query->query_vars['access_key'],
+				);
+				$user = get_users( $meta_query );
+
+				// If a matching user is found, return with the query unmodified.
+				if ( ! is_wp_error( $user ) && ! empty( $user ) ) {
+					return;
+				}
+			}
+
+			// No user has been found, so modify the query to only include public items.
+			$public_query = array(
+				array(
+					'taxonomy' => 'wnpa_item_visibility',
+					'field' => 'name',
+					'terms' => 'Public',
+				)
+			);
+			$query->set( 'tax_query', $public_query );
+		}
+
+		return;
 	}
 }
 global $wnpa_feed_item;
