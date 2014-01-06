@@ -17,6 +17,8 @@ class WNPA_Access_Key {
 		add_action( 'admin_enqueue_scripts',            array( $this, 'admin_enqueue_scripts' ), 10    );
 		add_action( 'wp_ajax_wnpa_generate_access_key', array( $this, 'generate_access_key'   ), 10    );
 		add_action( 'personal_options_update',          array( $this, 'update_profile'        ), 10, 1 );
+
+		add_filter( 'query_vars',                       array( $this, 'access_key_query_var'  ), 10, 1 );
 	}
 
 	/**
@@ -96,6 +98,19 @@ class WNPA_Access_Key {
 
 		$access_key = sanitize_key( $_POST['access_key'] );
 		update_user_meta( $user_id, $this->access_key_meta, $access_key );
+	}
+
+	/**
+	 * Filter public query vars to include the access key required for private feed items.
+	 *
+	 * @param array $query_vars Existing public query vars.
+	 *
+	 * @return array Modified public query vars.
+	 */
+	public function access_key_query_var( $query_vars ) {
+		$query_vars[] = 'access_key';
+
+		return $query_vars;
 	}
 }
 global $wnpa_access_key;
