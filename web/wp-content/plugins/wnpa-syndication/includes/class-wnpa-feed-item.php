@@ -133,17 +133,20 @@ class WNPA_Feed_Item {
 		if ( $query->is_feed() && 'wnpa_feed_item' === $query->query_vars['post_type'] ) {
 
 			if ( isset( $query->query_vars['access_key'] ) ) {
+				// Look for a user matching the requested access key
 				$meta_query = array(
 					'meta_key' => '_wnpa_access_key',
 					'meta_value' => $query->query_vars['access_key'],
 				);
 				$user = get_users( $meta_query );
 
+				// If a matching user is found, return with the query unmodified.
 				if ( ! is_wp_error( $user ) && ! empty( $user ) ) {
 					return;
 				}
 			}
 
+			// No user has been found, so modify the query to only include public items.
 			$public_query = array(
 				array(
 					'taxonomy' => 'wnpa_item_visibility',
@@ -151,7 +154,6 @@ class WNPA_Feed_Item {
 					'terms' => 'Public',
 				)
 			);
-
 			$query->set( 'tax_query', $public_query );
 		}
 
