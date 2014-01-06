@@ -1,5 +1,5 @@
-web/content/uploads
-web/content/plugins/admin-color-schemes/
-web/content/themes/
+web/wp-content/uploads
+web/wp-content/plugins/admin-color-schemes/
+web/wp-content/themes/
 .DS_Store
 .idea
