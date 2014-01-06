@@ -112,7 +112,7 @@ class WNPA_Access_Key {
 	 *
 	 * @return array Modified public query vars.
 	 */
-	public function filter_query_var( $query_vars ) {
+	public function filter_query_vars( $query_vars ) {
 		$query_vars[] = $this->query_var;
 
 		return $query_vars;
