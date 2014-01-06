@@ -131,6 +131,19 @@ class WNPA_Feed_Item {
 	 */
 	public function modify_feed_query( $query ) {
 		if ( $query->is_feed() && 'wnpa_feed_item' === $query->query_vars['post_type'] ) {
+
+			if ( isset( $query->query_vars['access_key'] ) ) {
+				$meta_query = array(
+					'meta_key' => '_wnpa_access_key',
+					'meta_value' => $query->query_vars['access_key'],
+				);
+				$user = get_users( $meta_query );
+
+				if ( ! is_wp_error( $user ) && ! empty( $user ) ) {
+					return $query;
+				}
+			}
+
 			$public_query = array(
 				array(
 					'taxonomy' => 'wnpa_item_visibility',
