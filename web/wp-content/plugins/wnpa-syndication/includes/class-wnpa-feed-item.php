@@ -140,7 +140,7 @@ class WNPA_Feed_Item {
 				$user = get_users( $meta_query );
 
 				if ( ! is_wp_error( $user ) && ! empty( $user ) ) {
-					return $query;
+					return;
 				}
 			}
 
@@ -153,7 +153,7 @@ class WNPA_Feed_Item {
 			);
 
 			$query->set( 'tax_query', $public_query );
-			return $query;
+			return;
 		}
 	}
 }
