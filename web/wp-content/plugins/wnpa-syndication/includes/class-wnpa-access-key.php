@@ -61,13 +61,12 @@ class WNPA_Access_Key {
 		}
 
 		$access_key = get_user_meta( get_current_user_id(), $this->access_key_meta, true );
+		$feed_url = home_url( 'feed-items/feed/' );
 
 		if ( empty( $access_key ) ) {
 			$access_key = '';
-			$feed_url = home_url( 'feed-items/feed/' );
 		} else {
 			$access_key = sanitize_key( $access_key );
-			$feed_url = home_url( 'feed-items/feed/' );
 			$feed_url = add_query_arg( $this->query_var, esc_html( $access_key ), $feed_url );
 		}
 
