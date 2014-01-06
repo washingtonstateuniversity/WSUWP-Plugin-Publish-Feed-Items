@@ -35,6 +35,10 @@ define('DB_COLLATE', '');
 
 define( 'WP_CONTENT_DIR', dirname( __FILE__ )  . '/content' );
 define( 'WP_CONTENT_URL', 'http://wnpa.wsu.edu/content' );
+
+define( 'WP_HOME', 'http://wnpa.wsu.edu' );
+define( 'WP_SITEURL', 'http://wnpa.wsu.edu/wordpress' );
+
 /**#@+
  * Authentication Unique Keys and Salts.
  *
