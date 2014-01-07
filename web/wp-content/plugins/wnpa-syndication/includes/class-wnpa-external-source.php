@@ -13,6 +13,11 @@ class WNPA_External_Source {
 	var $source_content_type = 'wnpa_external_source';
 
 	/**
+	 * @var string key to be used in the storage of the feed source URL meta data
+	 */
+	var $source_url_meta_key = '_wnpa_source_url';
+
+	/**
 	 * Add hooks as the class is initialized.
 	 */
 	public function __construct() {
@@ -62,8 +67,10 @@ class WNPA_External_Source {
 		add_meta_box( 'wnpa_external_source_url', 'External Source URL', array( $this, 'display_source_url_meta_box' ), $this->source_content_type, 'normal' );
 	}
 
-	public function display_source_url_meta_box() {
-		?><input type="text" value="" name="wnpa_source_url" class="widefat" />
+	public function display_source_url_meta_box( $post ) {
+		$external_source = get_post_meta( $post->ID, $this->source_url_meta_key, true );
+
+		?><input type="text" value="<?php echo esc_attr( $external_source ); ?>" name="wnpa_source_url" class="widefat" />
 		<span class="description">Enter the URL of the RSS feed for the external source to be added to the syndicate item feed.</span><?php
 	}
 }
