@@ -75,9 +75,13 @@ class WNPA_External_Source {
 	 */
 	public function display_source_url_meta_box( $post ) {
 		$external_source = get_post_meta( $post->ID, $this->source_url_meta_key, true );
+		$source_status = get_post_meta( $post->ID, '_wnpa_source_status', true );
 
 		?><input type="text" value="<?php echo esc_attr( $external_source ); ?>" name="wnpa_source_url" class="widefat" />
-		<span class="description">Enter the URL of the RSS feed for the external source to be added to the syndicate item feed.</span><?php
+		<span class="description">Enter the URL of the RSS feed for the external source to be added to the syndicate item feed.</span>
+	    <?php if ( $source_status ) {
+			?><p>Status: <?php echo esc_html( $source_status ); ?></p><?php
+		}
 	}
 
 	/**
@@ -103,6 +107,16 @@ class WNPA_External_Source {
 			return;
 		}
 
+		// Attempt a HEAD request to the specified URL for current status info.
+		$head_response = wp_remote_head( esc_url( $_POST['wnpa_source_url'] ) );
+
+		if ( is_wp_error( $head_response ) ) {
+			$response_meta = $head_response->get_error_message();
+		} else {
+			$response_meta = wp_remote_retrieve_response_message( $head_response );
+		}
+
+		update_post_meta( $post_id, '_wnpa_source_status', sanitize_text_field( $response_meta ) );
 		update_post_meta( $post_id, $this->source_url_meta_key, esc_url_raw( $_POST['wnpa_source_url'] ) );
 	}
 }
