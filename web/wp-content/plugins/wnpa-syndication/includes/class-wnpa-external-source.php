@@ -23,6 +23,7 @@ class WNPA_External_Source {
 	public function __construct() {
 		add_action( 'init',           array( $this, 'register_post_type' ) );
 		add_action( 'add_meta_boxes', array( $this, 'add_meta_boxes'     ) );
+		add_action( 'save_post',      array( $this, 'save_post'          ), 10, 2 );
 	}
 
 	/**
@@ -77,6 +78,32 @@ class WNPA_External_Source {
 
 		?><input type="text" value="<?php echo esc_attr( $external_source ); ?>" name="wnpa_source_url" class="widefat" />
 		<span class="description">Enter the URL of the RSS feed for the external source to be added to the syndicate item feed.</span><?php
+	}
+
+	/**
+	 * Save posted information from the source URL meta data input.
+	 *
+	 * @param int     $post_id ID of the current source being edited.
+	 * @param WP_Post $post    Post object of the current source being edited.
+	 */
+	public function save_post( $post_id, $post ) {
+		if ( $this->source_content_type !== $post->post_type ) {
+			return;
+		}
+
+		if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
+			return;
+		}
+
+		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+			return;
+		}
+
+		if ( ! isset( $_POST['wnpa_source_url'] ) ) {
+			return;
+		}
+
+		update_post_meta( $post_id, $this->source_url_meta_key, esc_url_raw( $_POST['wnpa_source_url'] ) );
 	}
 }
 global $wnpa_external_source;
