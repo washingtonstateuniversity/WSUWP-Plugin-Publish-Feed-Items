@@ -16,7 +16,8 @@ class WNPA_External_Source {
 	 * Add hooks as the class is initialized.
 	 */
 	public function __construct() {
-		add_action( 'init', array( $this, 'register_post_type' ) );
+		add_action( 'init',           array( $this, 'register_post_type' ) );
+		add_action( 'add_meta_boxes', array( $this, 'add_meta_boxes'     ) );
 	}
 
 	/**
@@ -52,6 +53,18 @@ class WNPA_External_Source {
 		);
 
 		register_post_type( $this->source_content_type, $args );
+	}
+
+	/**
+	 * Add meta boxes used to track data about external sources.
+	 */
+	public function add_meta_boxes() {
+		add_meta_box( 'wnpa_external_source_url', 'External Source URL', array( $this, 'display_source_url_meta_box' ), $this->source_content_type, 'normal' );
+	}
+
+	public function display_source_url_meta_box() {
+		?><input type="text" value="" name="wnpa_source_url" class="widefat" />
+		<span class="description">Enter the URL of the RSS feed for the external source to be added to the syndicate item feed.</span><?php
 	}
 }
 global $wnpa_external_source;
