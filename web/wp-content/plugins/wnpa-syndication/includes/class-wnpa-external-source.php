@@ -67,6 +67,11 @@ class WNPA_External_Source {
 		add_meta_box( 'wnpa_external_source_url', 'External Source URL', array( $this, 'display_source_url_meta_box' ), $this->source_content_type, 'normal' );
 	}
 
+	/**
+	 * Display the meta box for external source URL.
+	 *
+	 * @param WP_Post $post Current post object.
+	 */
 	public function display_source_url_meta_box( $post ) {
 		$external_source = get_post_meta( $post->ID, $this->source_url_meta_key, true );
 
