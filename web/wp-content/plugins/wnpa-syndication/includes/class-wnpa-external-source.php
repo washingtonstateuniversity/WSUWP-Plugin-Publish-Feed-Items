@@ -180,6 +180,9 @@ class WNPA_External_Source {
 	 * @param int    $post_id  ID of external source responsible for the feed.
 	 */
 	private function _consume_external_source( $feed_url, $post_id ) {
+		/* @type WPDB $wpdb */
+		global $wpdb;
+
 		// Apply a filter to the default feed cache lifetime.
 		add_filter( 'wp_feed_cache_transient_lifetime', array( $this, 'modify_feed_cache' ) );
 
@@ -193,9 +196,17 @@ class WNPA_External_Source {
 		if ( ! is_wp_error( $feed_response ) ) {
 			$feed_items = $feed_response->get_items();
 			foreach ( $feed_items as $feed_item ) {
-				$id = $feed_item->get_id(); // hash as unique ID to post meta
-				$link = $feed_item->get_link(); // store as meta link to original
-				$title = $feed_item->get_title(); // store as item title
+				// Use a hashed version of the item ID to see if it is unique.
+				$id      = md5( $feed_item->get_id() );
+				$existing_item_id = $wpdb->get_var( $wpdb->prepare( "SELECT $wpdb->postmeta.post_id FROM $wpdb->postmeta WHERE $wpdb->postmeta.meta_key = '_feed_item_unique_hash' AND $wpdb->postmeta.meta_value = %s", $id ) );
+
+				// Avoid creating duplicate feed items.
+				if ( $existing_item_id ) {
+					continue;
+				}
+
+				$link    = $feed_item->get_link(); // store as meta link to original
+				$title   = $feed_item->get_title(); // store as item title
 				$content = $feed_item->get_description(); // store as item content
 			}
 			// save items to a new feed item content type
