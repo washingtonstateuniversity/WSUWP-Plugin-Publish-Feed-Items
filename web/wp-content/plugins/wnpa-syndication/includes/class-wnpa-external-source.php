@@ -176,7 +176,9 @@ class WNPA_External_Source {
 		remove_filter( 'wp_feed_cache_transient_lifetime', array( $this, 'modify_feed_cache' ) );
 
 		// check for a valid feed response
-		// save items to a new feed item content type
+		if ( ! is_wp_error( $feed_response ) ) {
+			// save items to a new feed item content type
+		}
 	}
 
 	/**
