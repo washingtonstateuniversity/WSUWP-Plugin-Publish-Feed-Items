@@ -10,3 +10,10 @@ wp-single-projects:
     name: wnpa.wsu.edu
     database: wsu_wnpa
 ```
+
+## Terminology
+
+* Feed Item
+* External Source
+* Consume
+* Visibility
