@@ -144,6 +144,32 @@ class WNPA_External_Source {
 		update_post_meta( $post_id, '_wnpa_source_status', sanitize_text_field( $response_meta ) );
 		update_post_meta( $post_id, $this->source_url_meta_key, esc_url_raw( $_POST['wnpa_source_url'] ) );
 	}
+
+	/**
+	 * Grab a subset of external sources and loop through them to consume each individual
+	 * feed's data for import into WordPress.
+	 */
+	function batch_external_sources() {
+		// get IDs of all external sources for this request
+		//
+		// get feed from post_meta for each ID
+		$feed_url = get_post_meta( $post_id, $this->source_url_meta_key );
+		// consume the individual feed
+		$this->_consume_external_source( $feed_url, $post_id );
+	}
+
+	/**
+	 * Consume the specified external source and parse the feed data into individual
+	 * feed items in WordPress.
+	 *
+	 * @param string $feed_url URL of a feed to be consumed.
+	 * @param int    $post_id  ID of external source responsible for the feed.
+	 */
+	private function _consume_external_source( $feed_url, $post_id ) {
+		// fetch the feed
+
+		// save items to a new feed item content type
+	}
 }
 global $wnpa_external_source;
 $wnpa_external_source = new WNPA_External_Source();
