@@ -166,9 +166,28 @@ class WNPA_External_Source {
 	 * @param int    $post_id  ID of external source responsible for the feed.
 	 */
 	private function _consume_external_source( $feed_url, $post_id ) {
-		// fetch the feed
+		// Apply a filter to the default feed cache lifetime.
+		add_filter( 'wp_feed_cache_transient_lifetime', array( $this, 'modify_feed_cache' ) );
 
+		// Fetch the passed feed URL.
+		$feed_response = fetch_feed( esc_url( $feed_url ) );
+
+		// Remove the filter we added to avoid breaking expectations set elsewhere.
+		remove_filter( 'wp_feed_cache_transient_lifetime', array( $this, 'modify_feed_cache' ) );
+
+		// check for a valid feed response
 		// save items to a new feed item content type
+	}
+
+	/**
+	 * The default cache time for SimplePie is higher than we'd like. The results we are bringing
+	 * in will be updated frequently and we'll be controlling the request time through a cron
+	 * event. We're save to set a very low value here at the moment.
+	 *
+	 * @return int Time in seconds to cache the feed request.
+	 */
+	public function modify_feed_cache() {
+		return 30;
 	}
 }
 global $wnpa_external_source;
