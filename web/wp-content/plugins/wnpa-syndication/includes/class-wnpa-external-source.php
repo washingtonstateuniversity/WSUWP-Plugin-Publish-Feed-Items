@@ -24,6 +24,8 @@ class WNPA_External_Source {
 		add_action( 'init',           array( $this, 'register_post_type' ) );
 		add_action( 'add_meta_boxes', array( $this, 'add_meta_boxes'     ) );
 		add_action( 'save_post',      array( $this, 'save_post'          ), 10, 2 );
+
+		add_filter( 'bulk_post_updated_messages', array( $this, 'bulk_post_updated_message' ), 10, 2 );
 	}
 
 	/**
@@ -59,6 +61,24 @@ class WNPA_External_Source {
 		);
 
 		register_post_type( $this->source_content_type, $args );
+	}
+
+	/**
+	 * Modify the default `x posts ` bulk action response text to display `external source`
+	 * instead of `post` for the external sources custom content type.
+	 *
+	 * @param array $bulk_message Messages displayed when performing bulk actions.
+	 *
+	 * @return array Contains modified strings.
+	 */
+	public function bulk_post_updated_message( $bulk_messages ) {
+		if ( 'edit-wnpa_external_source' === get_current_screen()->id ) {
+			foreach ( $bulk_messages['post'] as $key => $value ) {
+				$bulk_messages['post'][ $key ] = str_replace( 'post', 'external source', $value );
+			}
+		}
+
+		return $bulk_messages;
 	}
 
 	/**
