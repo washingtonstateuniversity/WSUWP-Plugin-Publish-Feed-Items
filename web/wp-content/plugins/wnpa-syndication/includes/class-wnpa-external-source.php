@@ -181,7 +181,7 @@ class WNPA_External_Source {
 	 */
 	private function _consume_external_source( $feed_url, $post_id ) {
 		/* @type WPDB $wpdb */
-		global $wpdb;
+		global $wpdb, $wnpa_feed_item;
 
 		// Apply a filter to the default feed cache lifetime.
 		add_filter( 'wp_feed_cache_transient_lifetime', array( $this, 'modify_feed_cache' ) );
@@ -208,6 +208,18 @@ class WNPA_External_Source {
 				$link    = $feed_item->get_link(); // store as meta link to original
 				$title   = $feed_item->get_title(); // store as item title
 				$content = $feed_item->get_description(); // store as item content
+
+				$post_args = array(
+					'post_title'   => sanitize_text_field( $title ),
+					'post_content' => wp_kses_post( $content ),
+					'post_status'  => 'publish',
+					'post_type'    => $wnpa_feed_item->item_content_type,
+				);
+				$item_post_id = wp_insert_post( $post_args );
+
+				add_post_meta( $item_post_id, '_feed_item_unique_hash', $id );
+				add_post_meta( $item_post_id, '_feed_item_link_url', esc_url_raw( $link ) );
+				add_post_meta( $item_post_id, '_feed_item_source', $post_id );
 			}
 			// save items to a new feed item content type
 		}
