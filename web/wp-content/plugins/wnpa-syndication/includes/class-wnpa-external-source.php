@@ -150,12 +150,26 @@ class WNPA_External_Source {
 	 * feed's data for import into WordPress.
 	 */
 	function batch_external_sources() {
-		// get IDs of all external sources for this request
-		//
-		// get feed from post_meta for each ID
-		$feed_url = get_post_meta( $post_id, $this->source_url_meta_key );
-		// consume the individual feed
-		$this->_consume_external_source( $feed_url, $post_id );
+		// @todo meta query to get a subset
+		$query_args = array(
+			'post_type'      => $this->source_content_type,
+			'post_status'    => 'publish',
+			'fields'         => 'ids',
+			'posts_per_page' => 5,
+		);
+		$query = new WP_Query( $query_args );
+
+		// If our query didn't return any items, we can bail.
+		if ( ! isset( $query->posts ) || empty( $query->posts) ) {
+			return;
+		}
+
+		// Loop through each of the returned items and consume its source feed.
+		foreach ( $query->posts as $post_id ) {
+			$feed_url = get_post_meta( $post_id, $this->source_url_meta_key );
+
+			$this->_consume_external_source( $feed_url, $post_id );
+		}
 	}
 
 	/**
