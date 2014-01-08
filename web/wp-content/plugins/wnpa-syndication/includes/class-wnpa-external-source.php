@@ -166,7 +166,7 @@ class WNPA_External_Source {
 
 		// Loop through each of the returned items and consume its source feed.
 		foreach ( $query->posts as $post_id ) {
-			$feed_url = get_post_meta( $post_id, $this->source_url_meta_key );
+			$feed_url = get_post_meta( $post_id, $this->source_url_meta_key, true );
 
 			$this->_consume_external_source( $feed_url, $post_id );
 		}
