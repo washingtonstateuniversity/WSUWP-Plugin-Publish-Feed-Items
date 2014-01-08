@@ -191,6 +191,13 @@ class WNPA_External_Source {
 
 		// check for a valid feed response
 		if ( ! is_wp_error( $feed_response ) ) {
+			$feed_items = $feed_response->get_items();
+			foreach ( $feed_items as $feed_item ) {
+				$id = $feed_item->get_id(); // hash as unique ID to post meta
+				$link = $feed_item->get_link(); // store as meta link to original
+				$title = $feed_item->get_title(); // store as item title
+				$content = $feed_item->get_description(); // store as item content
+			}
 			// save items to a new feed item content type
 		}
 	}
