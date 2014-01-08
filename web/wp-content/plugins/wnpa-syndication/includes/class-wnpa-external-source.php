@@ -143,6 +143,9 @@ class WNPA_External_Source {
 
 		update_post_meta( $post_id, '_wnpa_source_status', sanitize_text_field( $response_meta ) );
 		update_post_meta( $post_id, $this->source_url_meta_key, esc_url_raw( $_POST['wnpa_source_url'] ) );
+
+		// When an external source is published, immediately consume the feed.
+		$this->_consume_external_source( esc_url( $_POST['wnpa_source_url'] ), $post_id );
 	}
 
 	/**
