@@ -1,5 +1,7 @@
 web/wp-content/uploads
 web/wp-content/plugins/admin-color-schemes/
+web/wp-content/plugins/debug-bar/
+web/wp-content/plugins/debug-bar-cron/
 web/wp-content/themes/
 .DS_Store
 .idea
