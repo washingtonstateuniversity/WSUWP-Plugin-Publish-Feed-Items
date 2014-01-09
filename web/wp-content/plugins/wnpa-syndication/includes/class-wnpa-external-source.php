@@ -241,6 +241,13 @@ class WNPA_External_Source {
 				$title   = $feed_item->get_title();
 				$content = $feed_item->get_description();
 				$date    = $feed_item->get_date( 'Y-m-d H:i:s' );
+				$author  = $feed_item->get_author();
+
+				if ( isset( $author->name ) ) {
+					$author = sanitize_text_field( $author->name );
+				} else {
+					$author = 'No Author';
+				}
 
 				$post_args = array(
 					'post_title'   => sanitize_text_field( $title ),
@@ -255,6 +262,7 @@ class WNPA_External_Source {
 				add_post_meta( $item_post_id, '_feed_item_link_url', esc_url_raw( $link ) );
 				add_post_meta( $item_post_id, '_feed_item_source', $post_id );
 				add_post_meta( $item_post_id, '_feed_item_created', current_time( 'mysql' ) );
+				add_post_meta( $item_post_id, '_feed_item_author', $author );
 
 			}
 			// save items to a new feed item content type
