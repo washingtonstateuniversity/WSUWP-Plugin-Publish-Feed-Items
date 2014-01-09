@@ -10,3 +10,4 @@
 
 include( dirname( __FILE__ ) . '/includes/class-wnpa-feed-item.php' );
 include( dirname( __FILE__ ) . '/includes/class-wnpa-access-key.php' );
+include( dirname( __FILE__ ) . '/includes/class-wnpa-external-source.php' );
