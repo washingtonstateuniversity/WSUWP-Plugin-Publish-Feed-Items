@@ -226,6 +226,8 @@ class WNPA_External_Source {
 		if ( ! is_wp_error( $feed_response ) ) {
 			$feed_items = $feed_response->get_items();
 			foreach ( $feed_items as $feed_item ) {
+				/* @type SimplePie_Item $feed_item */
+
 				// Use a hashed version of the item ID to see if it is unique.
 				$id      = md5( $feed_item->get_id() );
 				$existing_item_id = $wpdb->get_var( $wpdb->prepare( "SELECT $wpdb->postmeta.post_id FROM $wpdb->postmeta WHERE $wpdb->postmeta.meta_key = '_feed_item_unique_hash' AND $wpdb->postmeta.meta_value = %s", $id ) );
@@ -238,9 +240,11 @@ class WNPA_External_Source {
 				$link    = $feed_item->get_link(); // store as meta link to original
 				$title   = $feed_item->get_title(); // store as item title
 				$content = $feed_item->get_description(); // store as item content
+				$date    = $feed_item->get_date( 'Y-m-d H:i:s' );
 
 				$post_args = array(
 					'post_title'   => sanitize_text_field( $title ),
+					'post_date'    => $date,
 					'post_content' => wp_kses_post( $content ),
 					'post_status'  => 'publish',
 					'post_type'    => $wnpa_feed_item->item_content_type,
@@ -250,6 +254,8 @@ class WNPA_External_Source {
 				add_post_meta( $item_post_id, '_feed_item_unique_hash', $id );
 				add_post_meta( $item_post_id, '_feed_item_link_url', esc_url_raw( $link ) );
 				add_post_meta( $item_post_id, '_feed_item_source', $post_id );
+				add_post_meta( $item_post_id, '_feed_item_created', current_time( 'mysql' ) );
+
 			}
 			// save items to a new feed item content type
 		}
