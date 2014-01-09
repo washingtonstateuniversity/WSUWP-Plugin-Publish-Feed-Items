@@ -145,7 +145,9 @@ class WNPA_External_Source {
 		update_post_meta( $post_id, $this->source_url_meta_key, esc_url_raw( $_POST['wnpa_source_url'] ) );
 
 		// When an external source is published, immediately consume the feed.
-		$this->_consume_external_source( esc_url( $_POST['wnpa_source_url'] ), $post_id );
+		if ( 'publish' === $post->post_status ) {
+			$this->_consume_external_source( esc_url( $_POST['wnpa_source_url'] ), $post_id );
+		}
 	}
 
 	/**
