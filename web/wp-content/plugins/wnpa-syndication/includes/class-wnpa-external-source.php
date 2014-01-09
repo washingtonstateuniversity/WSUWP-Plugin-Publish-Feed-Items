@@ -26,8 +26,8 @@ class WNPA_External_Source {
 	 * Add hooks as the class is initialized.
 	 */
 	public function __construct() {
-		register_activation_hook(   __FILE__, array( $this, 'activate'   ) );
-		register_deactivation_hook( __FILE__, array( $this, 'deactivate' ) );
+		register_activation_hook(   dirname( dirname( __FILE__ ) ) . '/wnpa-syndication.php', array( $this, 'activate'   ) );
+		register_deactivation_hook( dirname( dirname( __FILE__ ) ) . '/wnpa-syndication.php', array( $this, 'deactivate' ) );
 
 		add_action( 'init',           array( $this, 'register_post_type' ) );
 		add_action( 'add_meta_boxes', array( $this, 'add_meta_boxes'     ) );
