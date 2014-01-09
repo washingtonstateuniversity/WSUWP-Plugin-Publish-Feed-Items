@@ -237,9 +237,9 @@ class WNPA_External_Source {
 					continue;
 				}
 
-				$link    = $feed_item->get_link(); // store as meta link to original
-				$title   = $feed_item->get_title(); // store as item title
-				$content = $feed_item->get_description(); // store as item content
+				$link    = $feed_item->get_link();
+				$title   = $feed_item->get_title();
+				$content = $feed_item->get_description();
 				$date    = $feed_item->get_date( 'Y-m-d H:i:s' );
 
 				$post_args = array(
