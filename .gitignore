@@ -1,7 +1,10 @@
-web/wp-content/uploads
-web/wp-content/plugins/admin-color-schemes/
-web/wp-content/plugins/debug-bar/
-web/wp-content/plugins/debug-bar-cron/
-web/wp-content/themes/
 .DS_Store
 .idea
+*sublime*
+wp-config.php
+wordpress
+wp-content/plugins/admin-color-schemes/
+wp-content/plugins/debug-bar/
+wp-content/plugins/debug-bar-cron/
+wp-content/uploads/
+wp-content/themes/
