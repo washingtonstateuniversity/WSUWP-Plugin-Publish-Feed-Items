@@ -82,7 +82,7 @@ class WNPA_External_Source {
 			'query_var'          => true,
 			'capability_type'    => 'post',
 			'hierarchical'       => false,
-			'supports'           => array( 'title', 'author', ),
+			'supports'           => false,
 		);
 
 		register_post_type( $this->source_content_type, $args );
