@@ -30,7 +30,7 @@ class WNPA_External_Source {
 		register_deactivation_hook( dirname( dirname( __FILE__ ) ) . '/wnpa-syndication.php', array( $this, 'deactivate' ) );
 
 		add_action( 'init',           array( $this, 'register_post_type' ) );
-		add_action( 'add_meta_boxes', array( $this, 'add_meta_boxes'     ) );
+		add_action( 'add_meta_boxes', array( $this, 'add_meta_boxes'     ), 10, 2 );
 		add_action( 'save_post',      array( $this, 'save_post'          ), 10, 2 );
 
 		// Use the custom hook setup to handle our cron action.
@@ -109,8 +109,17 @@ class WNPA_External_Source {
 	/**
 	 * Add meta boxes used to track data about external sources.
 	 */
-	public function add_meta_boxes() {
-		add_meta_box( 'wnpa_external_source_url', 'External Source URL', array( $this, 'display_source_url_meta_box' ), $this->source_content_type, 'normal' );
+	public function add_meta_boxes( $post_type, $post ) {
+		if ( $this->source_content_type !== $post_type ) {
+			return;
+		}
+
+		if ( empty( $post->post_title ) ) {
+			$meta_title = 'New External Source';
+		} else {
+			$meta_title = $post->post_title;
+		}
+		add_meta_box( 'wnpa_external_source_url', $meta_title, array( $this, 'display_source_url_meta_box' ), $this->source_content_type, 'normal' );
 	}
 
 	/**
