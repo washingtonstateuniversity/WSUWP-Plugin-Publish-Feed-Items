@@ -108,6 +108,9 @@ class WNPA_External_Source {
 
 	/**
 	 * Add meta boxes used to track data about external sources.
+	 *
+	 * @param string  $post_type The content type slug.
+	 * @param WP_Post $post      Contains information about the current post.
 	 */
 	public function add_meta_boxes( $post_type, $post ) {
 		if ( $this->source_content_type !== $post_type ) {
