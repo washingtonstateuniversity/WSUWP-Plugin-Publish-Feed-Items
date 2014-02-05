@@ -224,6 +224,12 @@ class WNPA_External_Source {
 
 		// check for a valid feed response
 		if ( ! is_wp_error( $feed_response ) ) {
+
+			$feed_title = $feed_response->get_title();
+			remove_filter( 'save_post', array( $this, 'save_post' ) );
+			wp_update_post( array( 'ID' => $post_id, 'post_title' => $feed_title ) );
+			add_filter( 'save_post', array( $this, 'save_post' ) );
+
 			$feed_items = $feed_response->get_items();
 			foreach ( $feed_items as $feed_item ) {
 				/* @type SimplePie_Item $feed_item */
