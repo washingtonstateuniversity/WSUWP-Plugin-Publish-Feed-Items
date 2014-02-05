@@ -237,16 +237,27 @@ class WNPA_External_Source {
 					continue;
 				}
 
-				$link    = $feed_item->get_link();
-				$title   = $feed_item->get_title();
-				$content = $feed_item->get_description();
-				$date    = $feed_item->get_date( 'Y-m-d H:i:s' );
-				$author  = $feed_item->get_author();
+				$link       = $feed_item->get_link();
+				$title      = $feed_item->get_title();
+				$content    = $feed_item->get_description();
+				$date       = $feed_item->get_date( 'Y-m-d H:i:s' );
+				$author     = $feed_item->get_author();
+				$visibility = $feed_item->get_item_tags( SIMPLEPIE_NAMESPACE_DC_11, 'accessRights' );
 
 				if ( isset( $author->name ) ) {
 					$author = sanitize_text_field( $author->name );
 				} else {
 					$author = 'No Author';
+				}
+
+				/**
+				 * If visibility is not specified, assume public. If visibility is specified with
+				 * an incorrect value, assume private.
+				 */
+				if ( empty( $visibility ) ) {
+					$visibility = 'public';
+				} else if ( ! in_array( $visibility, array( 'public', 'private' ) ) ) {
+					$visibility = 'private';
 				}
 
 				$post_args = array(
@@ -264,6 +275,7 @@ class WNPA_External_Source {
 				add_post_meta( $item_post_id, '_feed_item_created', current_time( 'mysql' ) );
 				add_post_meta( $item_post_id, '_feed_item_author', $author );
 
+				wp_set_object_terms( $item_post_id, $visibility, 'wnpa_item_visibility', false );
 			}
 			// save items to a new feed item content type
 		}
