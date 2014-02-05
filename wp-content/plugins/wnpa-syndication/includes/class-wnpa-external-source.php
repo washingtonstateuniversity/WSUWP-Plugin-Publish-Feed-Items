@@ -254,10 +254,12 @@ class WNPA_External_Source {
 				 * If visibility is not specified, assume public. If visibility is specified with
 				 * an incorrect value, assume private.
 				 */
-				if ( empty( $visibility ) ) {
+				if ( empty( $visibility[0]['data'] ) ) {
 					$visibility = 'public';
-				} else if ( ! in_array( $visibility, array( 'public', 'private' ) ) ) {
+				} else if ( ! in_array( $visibility[0]['data'], array( 'public', 'private' ) ) ) {
 					$visibility = 'private';
+				} else {
+					$visibility = $visibility[0]['data'];
 				}
 
 				$post_args = array(
