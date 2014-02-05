@@ -229,7 +229,7 @@ class WNPA_External_Source {
 				/* @type SimplePie_Item $feed_item */
 
 				// Use a hashed version of the item ID to see if it is unique.
-				$id      = md5( $feed_item->get_id() );
+				$id = md5( $feed_item->get_id() );
 				$existing_item_id = $wpdb->get_var( $wpdb->prepare( "SELECT $wpdb->postmeta.post_id FROM $wpdb->postmeta WHERE $wpdb->postmeta.meta_key = '_feed_item_unique_hash' AND $wpdb->postmeta.meta_value = %s", $id ) );
 
 				// Avoid creating duplicate feed items.
