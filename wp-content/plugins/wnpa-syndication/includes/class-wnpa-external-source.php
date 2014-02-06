@@ -249,9 +249,9 @@ class WNPA_External_Source {
 		if ( ! is_wp_error( $feed_response ) ) {
 
 			$feed_title = $feed_response->get_title();
-			remove_filter( 'save_post', array( $this, 'save_post' ) );
+			remove_action( 'save_post', array( $this, 'save_post' ), 10 );
 			wp_update_post( array( 'ID' => $post_id, 'post_title' => $feed_title ) );
-			add_filter( 'save_post', array( $this, 'save_post' ) );
+			add_action( 'save_post', array( $this, 'save_post' ), 10, 2 );
 
 			update_post_meta( $post_id, '_wnpa_feed_response', 'Success', true );
 
