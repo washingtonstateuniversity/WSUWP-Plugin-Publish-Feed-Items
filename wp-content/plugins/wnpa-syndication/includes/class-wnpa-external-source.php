@@ -30,7 +30,7 @@ class WNPA_External_Source {
 		register_deactivation_hook( dirname( dirname( __FILE__ ) ) . '/wnpa-syndication.php', array( $this, 'deactivate' ) );
 
 		add_action( 'init',           array( $this, 'register_post_type' ) );
-		add_action( 'add_meta_boxes', array( $this, 'add_meta_boxes'     ) );
+		add_action( 'add_meta_boxes', array( $this, 'add_meta_boxes'     ), 10, 2 );
 		add_action( 'save_post',      array( $this, 'save_post'          ), 10, 2 );
 
 		// Use the custom hook setup to handle our cron action.
@@ -82,7 +82,7 @@ class WNPA_External_Source {
 			'query_var'          => true,
 			'capability_type'    => 'post',
 			'hierarchical'       => false,
-			'supports'           => array( 'title', 'author', ),
+			'supports'           => false,
 		);
 
 		register_post_type( $this->source_content_type, $args );
@@ -108,9 +108,21 @@ class WNPA_External_Source {
 
 	/**
 	 * Add meta boxes used to track data about external sources.
+	 *
+	 * @param string  $post_type The content type slug.
+	 * @param WP_Post $post      Contains information about the current post.
 	 */
-	public function add_meta_boxes() {
-		add_meta_box( 'wnpa_external_source_url', 'External Source URL', array( $this, 'display_source_url_meta_box' ), $this->source_content_type, 'normal' );
+	public function add_meta_boxes( $post_type, $post ) {
+		if ( $this->source_content_type !== $post_type ) {
+			return;
+		}
+
+		if ( empty( $post->post_title ) ) {
+			$meta_title = 'New External Source';
+		} else {
+			$meta_title = $post->post_title;
+		}
+		add_meta_box( 'wnpa_external_source_url', $meta_title, array( $this, 'display_source_url_meta_box' ), $this->source_content_type, 'normal' );
 	}
 
 	/**
@@ -119,14 +131,23 @@ class WNPA_External_Source {
 	 * @param WP_Post $post Current post object.
 	 */
 	public function display_source_url_meta_box( $post ) {
-		$external_source = get_post_meta( $post->ID, $this->source_url_meta_key, true );
-		$source_status = get_post_meta( $post->ID, '_wnpa_source_status', true );
-
-		?><input type="text" value="<?php echo esc_attr( $external_source ); ?>" name="wnpa_source_url" class="widefat" />
-		<span class="description">Enter the URL of the RSS feed for the external source to be added to the syndicate item feed.</span>
-	    <?php if ( $source_status ) {
-			?><p><strong>URL Status:</strong> <?php echo esc_html( $source_status ); ?></p><?php
-		}
+		$external_source  = get_post_meta( $post->ID, $this->source_url_meta_key, true );
+		$source_status    = get_post_meta( $post->ID, '_wnpa_source_status',      true );
+		$feed_response    = get_post_meta( $post->ID, '_wnpa_feed_response',      true );
+		$feed_last_total  = get_post_meta( $post->ID, '_wnpa_feed_last_total',    true );
+		$feed_last_count  = get_post_meta( $post->ID, '_wnpa_feed_last_count',    true );
+		$feed_last_status = get_post_meta( $post->ID, '_wnpa_feed_last_status',   true );
+		?>
+		<h2>Feed URL:</h2>
+		<input type="text" value="<?php echo esc_attr( $external_source ); ?>" name="wnpa_source_url" class="widefat" />
+		<span class="description">Enter the URL of an RSS feed for the external source.</span>
+	    <ul>
+			<?php if ( $source_status ) : ?><li><strong>URL Check:</strong> <?php echo esc_html( $source_status ); ?></li><?php endif; ?>
+			<?php if ( $feed_response ) : ?><li><strong>Feed Response:</strong> <?php echo esc_html( $feed_response ); ?></li><?php endif; ?>
+			<?php if ( $feed_last_status )   : ?><li><strong>Feed Status:</strong> Last checked on <?php echo date( 'D, d M Y h:i:s', $feed_last_status + ( get_option( 'gmt_offset' ) * HOUR_IN_SECONDS )  ); ?></li><?php endif; ?>
+			<?php if ( false !== $feed_last_total ) : ?><li><strong>Feed Items:</strong> Pulled <?php echo absint( $feed_last_total ); ?> items, <?php echo absint( $feed_last_count ); ?> were new.</li><?php endif; ?>
+		</ul>
+		<?php
 	}
 
 	/**
@@ -213,6 +234,8 @@ class WNPA_External_Source {
 		/* @type WPDB $wpdb */
 		global $wpdb, $wnpa_feed_item;
 
+		update_post_meta( $post_id, '_wnpa_feed_last_status', time() );
+
 		// Apply a filter to the default feed cache lifetime.
 		add_filter( 'wp_feed_cache_transient_lifetime', array( $this, 'modify_feed_cache' ) );
 
@@ -224,7 +247,18 @@ class WNPA_External_Source {
 
 		// check for a valid feed response
 		if ( ! is_wp_error( $feed_response ) ) {
+
+			$feed_title = $feed_response->get_title();
+			remove_action( 'save_post', array( $this, 'save_post' ), 10 );
+			wp_update_post( array( 'ID' => $post_id, 'post_title' => $feed_title ) );
+			add_action( 'save_post', array( $this, 'save_post' ), 10, 2 );
+
+			update_post_meta( $post_id, '_wnpa_feed_response', 'Success', true );
+
 			$feed_items = $feed_response->get_items();
+			update_post_meta( $post_id, '_wnpa_feed_last_total', count( $feed_items ) );
+			$new_items = 0;
+
 			foreach ( $feed_items as $feed_item ) {
 				/* @type SimplePie_Item $feed_item */
 
@@ -278,8 +312,12 @@ class WNPA_External_Source {
 				add_post_meta( $item_post_id, '_feed_item_author', $author );
 
 				wp_set_object_terms( $item_post_id, $visibility, 'wnpa_item_visibility', false );
+				$new_items++;
+				update_post_meta( $post_id, '_wnpa_feed_last_count', $new_items );
 			}
 			// save items to a new feed item content type
+		} else {
+			update_post_meta( $post_id, '_wnpa_feed_response', $feed_response->get_error_message(), true );
 		}
 	}
 
