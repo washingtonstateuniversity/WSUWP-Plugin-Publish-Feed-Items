@@ -132,7 +132,8 @@ class WNPA_External_Source {
 	 */
 	public function display_source_url_meta_box( $post ) {
 		$external_source = get_post_meta( $post->ID, $this->source_url_meta_key, true );
-		$source_status = get_post_meta( $post->ID, '_wnpa_source_status', true );
+		$source_status   = get_post_meta( $post->ID, '_wnpa_source_status',      true );
+		$feed_response   = get_post_meta( $post->ID, '_wnpa_feed_response',      true );
 
 		?>
 		<h2>Feed URL:</h2>
@@ -140,6 +141,7 @@ class WNPA_External_Source {
 		<span class="description">Enter the URL of an RSS feed for the external source.</span>
 	    <ul>
 			<?php if ( $source_status ) : ?><li><strong>URL Status:</strong> <?php echo esc_html( $source_status ); ?></li><?php endif; ?>
+			<?php if ( $feed_response ) : ?><li><strong>Feed Response:</strong> <?php echo esc_html( $feed_response ); ?></li><?php endif; ?>
 		</ul>
 		<?php
 	}
@@ -245,6 +247,8 @@ class WNPA_External_Source {
 			wp_update_post( array( 'ID' => $post_id, 'post_title' => $feed_title ) );
 			add_filter( 'save_post', array( $this, 'save_post' ) );
 
+			update_post_meta( $post_id, '_wnpa_feed_response', 'Success', true );
+
 			$feed_items = $feed_response->get_items();
 			foreach ( $feed_items as $feed_item ) {
 				/* @type SimplePie_Item $feed_item */
@@ -301,6 +305,8 @@ class WNPA_External_Source {
 				wp_set_object_terms( $item_post_id, $visibility, 'wnpa_item_visibility', false );
 			}
 			// save items to a new feed item content type
+		} else {
+			update_post_meta( $post_id, '_wnpa_feed_response', $feed_response->get_error_message(), true );
 		}
 	}
 
