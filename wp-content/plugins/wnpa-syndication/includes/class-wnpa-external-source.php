@@ -134,11 +134,14 @@ class WNPA_External_Source {
 		$external_source = get_post_meta( $post->ID, $this->source_url_meta_key, true );
 		$source_status = get_post_meta( $post->ID, '_wnpa_source_status', true );
 
-		?><input type="text" value="<?php echo esc_attr( $external_source ); ?>" name="wnpa_source_url" class="widefat" />
-		<span class="description">Enter the URL of the RSS feed for the external source to be added to the syndicate item feed.</span>
-	    <?php if ( $source_status ) {
-			?><p><strong>URL Status:</strong> <?php echo esc_html( $source_status ); ?></p><?php
-		}
+		?>
+		<h2>Feed URL:</h2>
+		<input type="text" value="<?php echo esc_attr( $external_source ); ?>" name="wnpa_source_url" class="widefat" />
+		<span class="description">Enter the URL of an RSS feed for the external source.</span>
+	    <ul>
+			<?php if ( $source_status ) : ?><li><strong>URL Status:</strong> <?php echo esc_html( $source_status ); ?></li><?php endif; ?>
+		</ul>
+		<?php
 	}
 
 	/**
