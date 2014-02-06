@@ -131,12 +131,12 @@ class WNPA_External_Source {
 	 * @param WP_Post $post Current post object.
 	 */
 	public function display_source_url_meta_box( $post ) {
-		$external_source = get_post_meta( $post->ID, $this->source_url_meta_key, true );
-		$source_status   = get_post_meta( $post->ID, '_wnpa_source_status',      true );
-		$feed_response   = get_post_meta( $post->ID, '_wnpa_feed_response',      true );
-		$feed_last_total = get_post_meta( $post->ID, '_wnpa_feed_last_total',    true );
-		$feed_last_count = get_post_meta( $post->ID, '_wnpa_feed_last_count',    true );
-
+		$external_source  = get_post_meta( $post->ID, $this->source_url_meta_key, true );
+		$source_status    = get_post_meta( $post->ID, '_wnpa_source_status',      true );
+		$feed_response    = get_post_meta( $post->ID, '_wnpa_feed_response',      true );
+		$feed_last_total  = get_post_meta( $post->ID, '_wnpa_feed_last_total',    true );
+		$feed_last_count  = get_post_meta( $post->ID, '_wnpa_feed_last_count',    true );
+		$feed_last_status = get_post_meta( $post->ID, '_wnpa_feed_last_status',   true );
 		?>
 		<h2>Feed URL:</h2>
 		<input type="text" value="<?php echo esc_attr( $external_source ); ?>" name="wnpa_source_url" class="widefat" />
@@ -144,6 +144,7 @@ class WNPA_External_Source {
 	    <ul>
 			<?php if ( $source_status ) : ?><li><strong>URL Check:</strong> <?php echo esc_html( $source_status ); ?></li><?php endif; ?>
 			<?php if ( $feed_response ) : ?><li><strong>Feed Response:</strong> <?php echo esc_html( $feed_response ); ?></li><?php endif; ?>
+			<?php if ( $feed_last_status )   : ?><li><strong>Feed Status:</strong> Last checked on <?php echo date( 'D, d M Y h:i:s', $feed_last_status + ( get_option( 'gmt_offset' ) * HOUR_IN_SECONDS )  ); ?></li><?php endif; ?>
 			<?php if ( false !== $feed_last_total ) : ?><li><strong>Feed Items:</strong> Pulled <?php echo absint( $feed_last_total ); ?> items, <?php echo absint( $feed_last_count ); ?> were new.</li><?php endif; ?>
 		</ul>
 		<?php
@@ -232,6 +233,8 @@ class WNPA_External_Source {
 	private function _consume_external_source( $feed_url, $post_id ) {
 		/* @type WPDB $wpdb */
 		global $wpdb, $wnpa_feed_item;
+
+		update_post_meta( $post_id, '_wnpa_feed_last_status', time() );
 
 		// Apply a filter to the default feed cache lifetime.
 		add_filter( 'wp_feed_cache_transient_lifetime', array( $this, 'modify_feed_cache' ) );
