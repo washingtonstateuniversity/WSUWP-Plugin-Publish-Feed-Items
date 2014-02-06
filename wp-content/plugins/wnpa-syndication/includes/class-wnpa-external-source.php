@@ -134,6 +134,8 @@ class WNPA_External_Source {
 		$external_source = get_post_meta( $post->ID, $this->source_url_meta_key, true );
 		$source_status   = get_post_meta( $post->ID, '_wnpa_source_status',      true );
 		$feed_response   = get_post_meta( $post->ID, '_wnpa_feed_response',      true );
+		$feed_last_total = get_post_meta( $post->ID, '_wnpa_feed_last_total',    true );
+		$feed_last_count = get_post_meta( $post->ID, '_wnpa_feed_last_count',    true );
 
 		?>
 		<h2>Feed URL:</h2>
@@ -142,6 +144,7 @@ class WNPA_External_Source {
 	    <ul>
 			<?php if ( $source_status ) : ?><li><strong>URL Check:</strong> <?php echo esc_html( $source_status ); ?></li><?php endif; ?>
 			<?php if ( $feed_response ) : ?><li><strong>Feed Response:</strong> <?php echo esc_html( $feed_response ); ?></li><?php endif; ?>
+			<?php if ( false !== $feed_last_total ) : ?><li><strong>Feed Items:</strong> Pulled <?php echo absint( $feed_last_total ); ?> items, <?php echo absint( $feed_last_count ); ?> were new.</li><?php endif; ?>
 		</ul>
 		<?php
 	}
@@ -250,6 +253,9 @@ class WNPA_External_Source {
 			update_post_meta( $post_id, '_wnpa_feed_response', 'Success', true );
 
 			$feed_items = $feed_response->get_items();
+			update_post_meta( $post_id, '_wnpa_feed_last_total', count( $feed_items ) );
+			$new_items = 0;
+
 			foreach ( $feed_items as $feed_item ) {
 				/* @type SimplePie_Item $feed_item */
 
@@ -303,6 +309,8 @@ class WNPA_External_Source {
 				add_post_meta( $item_post_id, '_feed_item_author', $author );
 
 				wp_set_object_terms( $item_post_id, $visibility, 'wnpa_item_visibility', false );
+				$new_items++;
+				update_post_meta( $post_id, '_wnpa_feed_last_count', $new_items );
 			}
 			// save items to a new feed item content type
 		} else {
