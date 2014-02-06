@@ -140,7 +140,7 @@ class WNPA_External_Source {
 		<input type="text" value="<?php echo esc_attr( $external_source ); ?>" name="wnpa_source_url" class="widefat" />
 		<span class="description">Enter the URL of an RSS feed for the external source.</span>
 	    <ul>
-			<?php if ( $source_status ) : ?><li><strong>URL Status:</strong> <?php echo esc_html( $source_status ); ?></li><?php endif; ?>
+			<?php if ( $source_status ) : ?><li><strong>URL Check:</strong> <?php echo esc_html( $source_status ); ?></li><?php endif; ?>
 			<?php if ( $feed_response ) : ?><li><strong>Feed Response:</strong> <?php echo esc_html( $feed_response ); ?></li><?php endif; ?>
 		</ul>
 		<?php
