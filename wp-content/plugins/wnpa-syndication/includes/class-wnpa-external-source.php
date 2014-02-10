@@ -291,9 +291,12 @@ class WNPA_External_Source {
 				$tags      = array();
 				// Split the provided categories into tags and locations.
 				foreach ( $categories as $category ) {
+
+					// If no domain attribute is attached to category, assume a post tag
 					if ( empty( $category->scheme ) ) {
 						$tag = get_term_by( 'name', $category->term, 'post_tag' );
 
+						// get_term_by and wp_insert_term respond differently, so the logic here is weird.
 						if ( ! empty( $tag->term_id ) ) {
 							$tag_id = $tag->term_id;
 						} else {
@@ -310,6 +313,7 @@ class WNPA_External_Source {
 					} elseif ( 'wnpalocation' === $category->scheme ) {
 						$location = get_term_by( 'name', $category->term, 'wnpa_item_location' );
 
+						// get_term_by and wp_insert_term respond differently, so the logic here is weird.
 						if ( ! empty( $location->term_id ) ) {
 							$location_id = $location->term_id;
 						} else {
