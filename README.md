@@ -17,8 +17,8 @@ External sources are added and managed through the corresponding menu option in 
 1. Go to **External Sources** -> **Add New** in the left menu.
 1. Enter a valid RSS feed URL in **Feed URL**
     * e.g. `http://news.wsu.edu/feed/`
-1. Click `Save Draft` if you would like to save the source without retrieving items yet.
-1. Click `Publish` or `Update` if the items from this source should be published.
+1. Click **Save Draft** if you would like to save the source without retrieving items yet.
+1. Click **Publish** or **Update** if the items from this source should be published.
 
 As soon as an external source is entered and saved, information indicating success or failure of item retrieval will be shown.
 
