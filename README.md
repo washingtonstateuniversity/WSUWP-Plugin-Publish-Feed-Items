@@ -12,8 +12,10 @@ This plugin offers a central area for content from multiple external sources to 
 
 External sources can be any standard [RSS](http://cyber.law.harvard.edu/rss/rss.html) feed. At [WNPA](http://www.wnpa.com/), these are the feeds of weekly newspapers throughout the state of Washington.
 
-While any standard feed can be used, we do look for custom item tags in the feed to help categorize items and assign visibility.
+While any standard feed can be used, we do look for custom item tags in the feed to help categorize items and assign visibility. These same attributes are provided in the RSS feeds produced by WNPA Syndication.
 
+* [category](http://cyber.law.harvard.edu/rss/rss.html#ltcategorygtSubelementOfLtitemgt) Category elements with no specified domain will be used to assign general tags to feed items.
+* [category domain="wnpalocation"](http://cyber.law.harvard.edu/rss/rss.html#ltcategorygtSubelementOfLtitemgt)  Category elements with the `wnpalocation` domain assigned will be recognized under a location taxonomy.
 * [dc:accessRights](http://purl.org/dc/terms/accessRights) (Default `public`) Can be set to either `public` or `private` in a feed to indicate the visibility of an item to the general public.
 
 External sources are added and managed through the corresponding menu option in WordPress.
