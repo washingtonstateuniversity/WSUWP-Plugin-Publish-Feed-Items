@@ -12,6 +12,11 @@ class WNPA_Feed_Item {
 	var $item_visibility_taxonomy = 'wnpa_item_visibility';
 
 	/**
+	 * @var string Slug used for the location taxonomy.
+	 */
+	var $item_location_taxonomy = 'wnpa_item_location';
+
+	/**
 	 * @var string Slug used for the feed item content type.
 	 */
 	var $item_content_type = 'wnpa_feed_item';
@@ -19,6 +24,7 @@ class WNPA_Feed_Item {
 	public function __construct() {
 		add_action( 'init',          array( $this, 'register_post_type'           ), 10 );
 		add_action( 'init',          array( $this, 'register_taxonomy_visibility' ), 10 );
+		add_action( 'init',          array( $this, 'register_taxonomy_location'   ), 10 );
 		add_action( 'rss2_item',     array( $this, 'rss_item_visibility'          ), 10 );
 		add_action( 'pre_get_posts', array( $this, 'modify_feed_query'            ), 10 );
 
@@ -100,6 +106,30 @@ class WNPA_Feed_Item {
 			'rewrite'           => array( 'slug' => 'visibility' ),
 		);
 		register_taxonomy( $this->item_visibility_taxonomy, array( $this->item_content_type ), $args );
+	}
+
+	/**
+	 * Register the taxonomy used for feed item location.
+	 */
+	public function register_taxonomy_location() {
+		$labels = array(
+			'name'          => 'Location',
+			'search_items'  => 'Search Locations',
+			'all_items'     => 'All Locations',
+			'edit_item'     => 'Edit Location',
+			'update_item'   => 'Update Location',
+			'add_new_item'  => 'Add New Location',
+			'new_item_name' => 'New Location Name',
+		);
+
+		$args = array(
+			'hierarchical' => false,
+			'labels'       => $labels,
+			'show_ui'      => true,
+			'query_var'    => true,
+			'rewrite'      => array( 'slug' => 'location' ),
+		);
+		register_taxonomy( $this->item_location_taxonomy, array( $this->item_content_type ), $args );
 	}
 
 	/**
