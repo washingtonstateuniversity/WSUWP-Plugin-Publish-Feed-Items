@@ -12,12 +12,6 @@ This plugin offers a central area for content from multiple external sources to 
 
 External sources can be any standard [RSS](http://cyber.law.harvard.edu/rss/rss.html) feed. At [WNPA](http://www.wnpa.com/), these are the feeds of weekly newspapers throughout the state of Washington.
 
-While any standard feed can be used, we do look for custom item tags in the feed to help categorize items and assign visibility. These same attributes are provided in the RSS feeds produced by WNPA Syndication.
-
-* [category](http://cyber.law.harvard.edu/rss/rss.html#ltcategorygtSubelementOfLtitemgt) Category elements with no specified domain will be used to assign general tags to feed items.
-* [category domain="wnpalocation"](http://cyber.law.harvard.edu/rss/rss.html#ltcategorygtSubelementOfLtitemgt)  Category elements with the `wnpalocation` domain assigned will be recognized under a location taxonomy.
-* [dc:accessRights](http://purl.org/dc/terms/accessRights) (Default `public`) Can be set to either `public` or `private` in a feed to indicate the visibility of an item to the general public.
-
 External sources are added and managed through the corresponding menu option in WordPress.
 
 1. Go to **External Sources** -> **Add New** in the left menu.
@@ -28,13 +22,21 @@ External sources are added and managed through the corresponding menu option in 
 
 As soon as an external source is entered and saved, information indicating success or failure of item retrieval will be shown.
 
+#### Additional Feed Attributes
+
+While any standard feed can be used, we also look for specific elements in the feed to help categorize items and assign visibility.
+
+* [category](http://cyber.law.harvard.edu/rss/rss.html#ltcategorygtSubelementOfLtitemgt) Category elements with no specified domain will be used to assign general tags to feed items.
+* [category domain="wnpalocation"](http://cyber.law.harvard.edu/rss/rss.html#ltcategorygtSubelementOfLtitemgt)  Category elements with the `wnpalocation` domain assigned will be recognized under a location taxonomy.
+* [dc:accessRights](http://purl.org/dc/terms/accessRights) (Default `public`) Can be set to either `public` or `private` in a feed to indicate the visibility of an item to the general public.
+
+These same attributes are provided in the RSS feeds produced by WNPA Syndication.
+
 ### Feed Items
 
-Feed items are the individual articles pulled in through the external source RSS feed and can be accessed under the Feed Items menu in WordPress.
+Feed items are the individual articles pulled in through the external source RSS feed and can be accessed under the **Feed Items** menu in WordPress. Once these items have been pulled in, they are republished through a central feed such as `http://wnpa.wsu.edu/feed-items/feed/`.
 
-As soon as these items are available to us, they are republished through a central feed such as `http://wnpa.wsu.edu/feed-items/feed/` to be consumed by others that have access.
-
-By default, only feed items that have a visibility of `public` will be shown. To see items in a feed that have been marked as `private`, an access key is required.
+By default, only feed items that have a visibility of `public` will be shown in this central feed. To see items in a feed that have been marked as `private`, an access key is required.
 
 ### Access Keys
 
