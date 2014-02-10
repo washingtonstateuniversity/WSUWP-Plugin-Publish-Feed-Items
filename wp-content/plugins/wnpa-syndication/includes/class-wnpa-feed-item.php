@@ -22,13 +22,14 @@ class WNPA_Feed_Item {
 	var $item_content_type = 'wnpa_feed_item';
 
 	public function __construct() {
-		add_action( 'init',          array( $this, 'register_post_type'           ), 10 );
-		add_action( 'init',          array( $this, 'register_taxonomy_visibility' ), 10 );
-		add_action( 'init',          array( $this, 'register_taxonomy_location'   ), 10 );
-		add_action( 'rss2_item',     array( $this, 'rss_item_visibility'          ), 10 );
-		add_action( 'pre_get_posts', array( $this, 'modify_feed_query'            ), 10 );
+		add_action( 'init',             array( $this, 'register_post_type'           ), 10    );
+		add_action( 'init',             array( $this, 'register_taxonomy_visibility' ), 10    );
+		add_action( 'init',             array( $this, 'register_taxonomy_location'   ), 10    );
+		add_action( 'rss2_item',        array( $this, 'rss_item_visibility'          ), 10    );
+		add_action( 'pre_get_posts',    array( $this, 'modify_feed_query'            ), 10    );
 
-		add_filter( 'wp_dropdown_cats', array( $this, 'selective_taxonomy_dropdown' ), 10, 1 );
+		add_filter( 'the_category_rss', array( $this, 'rss_category_location'        ), 10, 1 );
+		add_filter( 'wp_dropdown_cats', array( $this, 'selective_taxonomy_dropdown'  ), 10, 1 );
 	}
 
 	/**
@@ -149,6 +150,28 @@ class WNPA_Feed_Item {
 		}
 
 		?>	<dc:accessRights><?php echo esc_html( $visibility ); ?></dc:accessRights><?php
+	}
+
+	/**
+	 * Output fields in an RSS feed indicating one or more locations for each
+	 * individual items. Uses the category field with a wnpalocation domain
+	 * to indicate the taxonomy type.
+	 */
+	public function rss_category_location( $rss_category_list ) {
+		global $post;
+
+		$locations = get_the_terms( $post->ID, $this->item_location_taxonomy );
+
+		if ( empty( $locations) || is_wp_error( $locations ) ) {
+			return $rss_category_list;
+		}
+
+		foreach ( $locations as $location ) {
+			$location_name = sanitize_term_field( 'name', $location->name, $location->term_id, $this->item_location_taxonomy, 'rss' );
+			$rss_category_list .= '<category domain="wnpalocation"><![CDATA[' . @html_entity_decode( $location_name, ENT_COMPAT, get_option( 'blog_charset' ) ) . ']]></category>';
+		}
+
+		return $rss_category_list;
 	}
 
 	/**
