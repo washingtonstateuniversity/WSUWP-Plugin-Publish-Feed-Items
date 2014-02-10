@@ -293,11 +293,19 @@ class WNPA_External_Source {
 				foreach ( $categories as $category ) {
 					if ( empty( $category->scheme ) ) {
 						$tag = get_term_by( 'name', $category->term, 'post_tag' );
-						if ( empty( $tag->term_id ) ) {
+
+						if ( ! empty( $tag->term_id ) ) {
+							$tag_id = $tag->term_id;
+						} else {
 							$tag = wp_insert_term( $category->term, 'post_tag' );
+
+							if ( isset( $tag['term_id'] ) ) {
+								$tag_id = $tag['term_id'];
+							}
 						}
-						if ( ! empty( $tag->term_id ) && ! is_wp_error( $tag ) ) {
-							$tags[] = $tag->term_id;
+
+						if ( ! empty( $tag_id ) ) {
+							$tags[] = $tag_id;
 						}
 					} elseif ( 'wnpalocation' === $category->scheme ) {
 						$location = get_term_by( 'name', $category->term, 'wnpa_item_location' );
