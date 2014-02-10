@@ -1,11 +1,11 @@
 <?php
 /**
  * Plugin Name: WNPA Syndication
- * Plugin URI: http://web.wsu.edu/
- * Description: TBD
- * Author: washingtonstateuniversity
+ * Plugin URI: https://github.com/washingtonstateuniversity/wnpa-syndication
+ * Description: Manage and republish content from multiple external sources into a single consumable feed.
+ * Author: washingtonstateuniversity, jeremyfelt
  * Version 0.1
- * Author URI: http://web.wsu.edu
+ * Author URI: http://web.wsu.edu/
  */
 
 include( dirname( __FILE__ ) . '/includes/class-wnpa-feed-item.php' );
