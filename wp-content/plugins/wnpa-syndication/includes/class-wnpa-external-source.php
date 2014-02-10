@@ -98,11 +98,11 @@ class WNPA_External_Source {
 	 */
 	public function bulk_post_updated_message( $bulk_messages, $count ) {
 		if ( 'edit-wnpa_external_source' === get_current_screen()->id ) {
-			$bulk_messages['post']['updated']   = _n( '%s external source updated.', '%s external sources updated.', $count['updated'] );
-			$bulk_messages['post']['locked']    = _n( '%s external source not updated, somebody is editing it.', '%s external sources not updated, somebody is editing them.', $count['locked'] );
-			$bulk_messages['post']['deleted']   = _n( '%s external source permanently deleted.', '%s external sources permanently deleted.', $count['deleted'] );
-			$bulk_messages['post']['trashed']   = _n( '%s external source moved to the Trash.', '%s external sources moved to the Trash.', $count['trashed'] );
-			$bulk_messages['post']['untrashed'] = _n( '%s external source restored from the Trash.', '%s external sources restored from the Trash.', $count['untrashed'] );
+			$bulk_messages['post']['updated']   = _n( '%s external source updated.', '%s external sources updated.', $count['updated'], 'wnpa-syndication' );
+			$bulk_messages['post']['locked']    = _n( '%s external source not updated, somebody is editing it.', '%s external sources not updated, somebody is editing them.', $count['locked'], 'wnpa-syndication' );
+			$bulk_messages['post']['deleted']   = _n( '%s external source permanently deleted.', '%s external sources permanently deleted.', $count['deleted'], 'wnpa-syndication' );
+			$bulk_messages['post']['trashed']   = _n( '%s external source moved to the Trash.', '%s external sources moved to the Trash.', $count['trashed'], 'wnpa-syndication' );
+			$bulk_messages['post']['untrashed'] = _n( '%s external source restored from the Trash.', '%s external sources restored from the Trash.', $count['untrashed'], 'wnpa-syndication' );
 		}
 
 		return $bulk_messages;

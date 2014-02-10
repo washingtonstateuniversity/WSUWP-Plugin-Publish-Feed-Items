@@ -6,6 +6,7 @@
  * Author: washingtonstateuniversity, jeremyfelt
  * Version 0.1
  * Author URI: http://web.wsu.edu/
+ * Text Domain: wnpa-syndication
  */
 
 include( dirname( __FILE__ ) . '/includes/class-wnpa-feed-item.php' );
