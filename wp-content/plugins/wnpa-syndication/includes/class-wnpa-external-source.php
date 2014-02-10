@@ -193,6 +193,8 @@ class WNPA_External_Source {
 		// When an external source is published, immediately consume the feed.
 		if ( 'publish' === $post->post_status ) {
 			$this->_consume_external_source( esc_url( $_POST['wnpa_source_url'] ), $post_id );
+		} elseif ( in_array( $post->post_status, array( 'draft', 'future' ) ) ) {
+			$this->_consume_external_source( esc_url( $_POST['wnpa_source_url'] ), $post_id, false );
 		}
 	}
 
@@ -230,7 +232,7 @@ class WNPA_External_Source {
 	 * @param string $feed_url URL of a feed to be consumed.
 	 * @param int    $post_id  ID of external source responsible for the feed.
 	 */
-	private function _consume_external_source( $feed_url, $post_id ) {
+	private function _consume_external_source( $feed_url, $post_id, $include_items = true ) {
 		/* @type WPDB $wpdb */
 		global $wpdb, $wnpa_feed_item;
 
@@ -254,6 +256,10 @@ class WNPA_External_Source {
 			add_action( 'save_post', array( $this, 'save_post' ), 10, 2 );
 
 			update_post_meta( $post_id, '_wnpa_feed_response', 'Success', true );
+
+			if ( false === $include_items ) {
+				return;
+			}
 
 			$feed_items = $feed_response->get_items();
 			update_post_meta( $post_id, '_wnpa_feed_last_total', count( $feed_items ) );
