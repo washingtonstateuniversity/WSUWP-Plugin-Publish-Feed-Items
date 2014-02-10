@@ -1,4 +1,4 @@
-# WSU / WNPA Syndication
+# WNPA Syndication
 
 WNPA Syndication is a [WordPress](http://wordpress.org) plugin used to manage and republish content from multiple external sources into a single consumable feed.
 
