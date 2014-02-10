@@ -2,8 +2,6 @@
 
 WNPA Syndication is a [WordPress](http://wordpress.org) plugin used to manage and republish content from multiple external sources into a single consumable feed.
 
-Once the plugin is activated, two additional menu items will be available in the left bar - Feed Items and External Sources.
-
 ## External Sources
 
 External sources can be any standard [RSS](http://cyber.law.harvard.edu/rss/rss.html) feed. At [WNPA](http://www.wnpa.com/), these are the feeds of weekly newspapers throughout the state of Washington.
