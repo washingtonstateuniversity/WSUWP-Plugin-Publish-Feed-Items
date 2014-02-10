@@ -285,6 +285,31 @@ class WNPA_External_Source {
 				$date       = $feed_item->get_date( 'Y-m-d H:i:s' );
 				$author     = $feed_item->get_author();
 				$visibility = $feed_item->get_item_tags( SIMPLEPIE_NAMESPACE_DC_11, 'accessRights' );
+				$categories = $feed_item->get_categories();
+
+				$locations = array();
+				$tags      = array();
+				// Split the provided categories into tags and locations.
+				foreach ( $categories as $category ) {
+					if ( empty( $category->scheme ) ) {
+						$tag = get_term_by( 'name', $category->term, 'post_tag' );
+						if ( empty( $tag->term_id ) ) {
+							$tag = wp_insert_term( $category->term, 'post_tag' );
+						}
+						if ( ! empty( $tag->term_id ) && ! is_wp_error( $tag ) ) {
+							$tags[] = $tag->term_id;
+						}
+					} elseif ( 'wnpalocation' === $category->scheme ) {
+						$location = get_term_by( 'name', $category->term, 'wnpa_item_location' );
+						if ( empty( $location->term_id ) ) {
+							$location = wp_insert_term( $category->term, 'wnpa_item_location' );
+						}
+
+						if ( ! empty( $location->term_id ) && ! is_wp_error( $location ) ) {
+							$locations[] = $location->term_id;
+						}
+					}
+				}
 
 				if ( isset( $author->name ) ) {
 					$author = sanitize_text_field( $author->name );
@@ -319,7 +344,10 @@ class WNPA_External_Source {
 				add_post_meta( $item_post_id, '_feed_item_created', current_time( 'mysql' ) );
 				add_post_meta( $item_post_id, '_feed_item_author', $author );
 
+				wp_set_object_terms( $item_post_id, $tags,       'post_tag',             false );
+				wp_set_object_terms( $item_post_id, $locations,  'wnpa_item_location',   false );
 				wp_set_object_terms( $item_post_id, $visibility, 'wnpa_item_visibility', false );
+
 				$new_items++;
 				update_post_meta( $post_id, '_wnpa_feed_last_count', $new_items );
 			}

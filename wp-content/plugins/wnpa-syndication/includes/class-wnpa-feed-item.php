@@ -80,9 +80,11 @@ class WNPA_Feed_Item {
 			'has_archive'        => 'feed-items',
 			'hierarchical'       => false,
 			'supports'           => array( 'title', 'editor', 'author', 'thumbnail', 'excerpt' ),
+			'taxonomies'         => array( 'post_tag' )
 		);
 
 		register_post_type( $this->item_content_type, $args );
+
 	}
 
 	/**
