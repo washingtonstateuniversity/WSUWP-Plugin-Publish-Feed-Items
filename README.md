@@ -6,14 +6,19 @@ Once the plugin is installed, two additional menu items will be available in the
 
 ## External Sources
 
-External sources can be any standard RSS feed. For the WNPA, these are the feeds of weekly newspapers throughout the state of Washington.
+External sources can be any standard [RSS](http://cyber.law.harvard.edu/rss/rss.html) feed. At [WNPA](http://www.wnpa.com/), these are the feeds of weekly newspapers throughout the state of Washington.
 
 While any standard feed can be used, we do look for custom item tags in the feed to help categorize items and assign visibility.
 
-* [dc:accessRights](http://purl.org/dc/terms/accessRights) can be set to either `public` or `private` in a feed to indicate the visibility of an item to the general public.
-    * Default: `public`
+* [dc:accessRights](http://purl.org/dc/terms/accessRights) (Default `public`) Can be set to either `public` or `private` in a feed to indicate the visibility of an item to the general public.
 
-External sources are added and managed through the corresponding menu option in WordPress. The only input field available when adding an external source is it's URL, which should be something like `http://news.wsu.edu/feed/`.
+External sources are added and managed through the corresponding menu option in WordPress.
+
+1. Go to **External Sources** -> **Add New** in the left menu.
+1. Enter a valid RSS feed URL in **Feed URL**
+    * e.g. `http://news.wsu.edu/feed/`
+1. Click `Save Draft` if you would like to save the source without retrieving items yet.
+1. Click `Publish` or `Update` if the items from this source should be published.
 
 As soon as an external source is entered and saved, information indicating success or failure of item retrieval will be shown.
 
