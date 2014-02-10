@@ -309,12 +309,19 @@ class WNPA_External_Source {
 						}
 					} elseif ( 'wnpalocation' === $category->scheme ) {
 						$location = get_term_by( 'name', $category->term, 'wnpa_item_location' );
-						if ( empty( $location->term_id ) ) {
+
+						if ( ! empty( $location->term_id ) ) {
+							$location_id = $location->term_id;
+						} else {
 							$location = wp_insert_term( $category->term, 'wnpa_item_location' );
+
+							if ( isset( $location['term_id'] ) ) {
+								$location_id = $location['term_id'];
+							}
 						}
 
-						if ( ! empty( $location->term_id ) && ! is_wp_error( $location ) ) {
-							$locations[] = $location->term_id;
+						if ( ! empty( $location_id ) ) {
+							$locations[] = $location_id;
 						}
 					}
 				}
