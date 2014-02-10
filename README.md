@@ -34,9 +34,7 @@ These same attributes are provided in the RSS feeds produced by WNPA Syndication
 
 ### Feed Items
 
-Feed items are the individual articles pulled in through the external source RSS feed and can be accessed under the **Feed Items** menu in WordPress.
-
-As soon as these items are available to us, they are republished through a central feed such as `http://wnpa.wsu.edu/feed-items/feed/`.
+Feed items are the individual articles pulled in through the external source RSS feed and can be accessed under the **Feed Items** menu in WordPress. Once these items have been pulled in, they are republished through a central feed such as `http://wnpa.wsu.edu/feed-items/feed/`.
 
 By default, only feed items that have a visibility of `public` will be shown in this central feed. To see items in a feed that have been marked as `private`, an access key is required.
 
