@@ -2,7 +2,13 @@
 
 WNPA Syndication is a [WordPress](http://wordpress.org) plugin used to manage and republish content from multiple external sources into a single consumable feed.
 
-## External Sources
+## Overview
+
+The primary objective for WNPA Syndication is to ease the sharing of news stories between several organizations.
+
+This plugin offers a central area for content from multiple external sources to be stored. This content is then republished through a single feed that can be used by any of those sources to augment local news collections.
+
+### External Sources
 
 External sources can be any standard [RSS](http://cyber.law.harvard.edu/rss/rss.html) feed. At [WNPA](http://www.wnpa.com/), these are the feeds of weekly newspapers throughout the state of Washington.
 
@@ -20,7 +26,7 @@ External sources are added and managed through the corresponding menu option in 
 
 As soon as an external source is entered and saved, information indicating success or failure of item retrieval will be shown.
 
-## Feed Items
+### Feed Items
 
 Feed items are the individual articles pulled in through the external source RSS feed and can be accessed under the Feed Items menu in WordPress.
 
@@ -28,7 +34,7 @@ As soon as these items are available to us, they are republished through a centr
 
 By default, only feed items that have a visibility of `public` will be shown. To see items in a feed that have been marked as `private`, an access key is required.
 
-## Access Keys
+### Access Keys
 
 Access keys are used in combination with the central feed to gain access to items that have been marked as private. Each user has the ability to generate their own access key through their profile.
 
