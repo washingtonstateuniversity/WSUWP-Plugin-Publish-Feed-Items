@@ -6,7 +6,7 @@ WNPA Syndication is a [WordPress](http://wordpress.org) plugin used to manage an
 
 The primary objective for WNPA Syndication is to ease the sharing of news stories between several organizations.
 
-This plugin offers a central area for content from multiple external sources to be stored. This content is then republished through a single feed that can be used by any of those sources to augment local news collections.
+This plugin offers a central area for content from multiple external sources to be stored. Content is republished through a single feed that can be used to augment local news collections.
 
 ### External Sources
 
@@ -24,13 +24,13 @@ External sources are added and managed through the corresponding menu option in 
 
 #### Additional Feed Attributes
 
-While any standard feed can be used, we also look for specific elements in the feed to help categorize items and assign visibility.
+While any standard RSS feed can be used, specific item elements in the feed can help categorize content and assign visibility.
 
 * [category](http://cyber.law.harvard.edu/rss/rss.html#ltcategorygtSubelementOfLtitemgt) Category elements with no specified domain will be used to assign general tags to feed items.
 * [category domain="wnpalocation"](http://cyber.law.harvard.edu/rss/rss.html#ltcategorygtSubelementOfLtitemgt)  Category elements with the `wnpalocation` domain assigned will be recognized under a location taxonomy.
 * [dc:accessRights](http://purl.org/dc/terms/accessRights) (Default `public`) Can be set to either `public` or `private` in a feed to indicate the visibility of an item to the general public.
 
-These same attributes are provided in the RSS feeds produced by WNPA Syndication.
+These same item elements are provided in the RSS feeds produced by WNPA Syndication.
 
 #### Hourly Updates
 
