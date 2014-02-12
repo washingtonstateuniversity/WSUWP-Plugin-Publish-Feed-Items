@@ -14,7 +14,8 @@ External sources can be any standard [RSS](http://cyber.law.harvard.edu/rss/rss.
 
 External sources are added and managed through the corresponding menu option in WordPress.
 
-1. Go to **External Sources** -> **Add New** in the left menu.
+1. Go to **External Sources** under **Add New** in the left menu of the admin area.
+    * This can also be accessed via **New** in the top toolbar.
 1. Enter a valid RSS feed URL in **Feed URL**
     * e.g. `http://news.wsu.edu/feed/`
 1. Save the source. Information indicating success or failure of item retrieval will be displayed.
