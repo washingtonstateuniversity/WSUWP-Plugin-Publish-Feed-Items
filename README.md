@@ -42,7 +42,7 @@ By default, only feed items that have a visibility of `public` will be shown in 
 
 Access keys are used in combination with the central feed to gain access to items that have been marked as private. Each user has the ability to generate their own access key through their profile.
 
-1. Go to **Users** -> **Your Profile** in the left menu.
+1. Go to **Your Profile** under **Users** in the left menu of the admin area.
 1. Scroll to the bottom of your profile page. **WNPA Access Information** should be listed.
 1. Click **Generate** to populate the field for **Access Key**.
 1. Click **Update Profile** at the bottom.
