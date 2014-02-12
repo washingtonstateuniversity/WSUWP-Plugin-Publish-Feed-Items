@@ -32,6 +32,10 @@ While any standard feed can be used, we also look for specific elements in the f
 
 These same attributes are provided in the RSS feeds produced by WNPA Syndication.
 
+#### Hourly Updates
+
+Once an external source is added, it will be processed on an hourly schedule for new feed items.
+
 ### Feed Items
 
 Feed items are the individual articles pulled in through the external source RSS feed and can be accessed under the **Feed Items** menu in WordPress.
