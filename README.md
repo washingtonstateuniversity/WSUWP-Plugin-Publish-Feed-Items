@@ -38,7 +38,7 @@ Feed items are the individual articles pulled in through the external source RSS
 
 #### Central Feed
 
-Once items have been pulled in from external sources, they are immediately republished through a central feed. (e.g. `http://wnpa.wsu.edu/feed-items/feed/`)
+Once items have been pulled in from external sources, they are immediately republished through a central feed.
 
 * If the permalink option in **General** under **Settings** in the left menu of the admin area is set to anything other than *Default*, the URL of the feed will follow the structure of `http://wnpa.wsu.edu/feed-items/feed/`.
 * If the permalink option is left at its default setting the URL will follow the structure of `http://wnpa.wsu.edu/?post_type=wnpa_feed_item&feed=rss2`.
