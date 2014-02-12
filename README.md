@@ -43,7 +43,7 @@ Once items have been pulled in from external sources, they are immediately repub
 * If the permalink option in **General** under **Settings** in the left menu of the admin area is set to anything other than *Default*, the URL of the feed will follow the structure of `http://wnpa.wsu.edu/feed-items/feed/`.
 * If the permalink option is left at its default setting the URL will follow the structure of `http://wnpa.wsu.edu/?post_type=wnpa_feed_item&feed=rss2`.
 
-By default, only feed items that have a visibility of `public` will be shown in this central feed. To see items in a feed that have been marked as `private`, an access key is required.
+Only feed items that have a visibility of `public` will be shown in this central feed. To see items in a feed that have been marked as `private`, an access key is required.
 
 ### Access Keys
 
