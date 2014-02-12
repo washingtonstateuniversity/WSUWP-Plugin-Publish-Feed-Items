@@ -8,7 +8,7 @@ The primary objective for WNPA Syndication is to ease the sharing of news storie
 
 This plugin offers a central area for content from multiple external sources to be stored. Content is republished through a single feed that can be used to augment local news collections.
 
-### External Sources
+## External Sources
 
 External sources can be any standard [RSS](http://cyber.law.harvard.edu/rss/rss.html) feed. At [WNPA](http://www.wnpa.com/), these are the feeds of weekly newspapers throughout the state of Washington.
 
@@ -22,11 +22,11 @@ External sources are added and managed through the corresponding menu option in 
     * Click **Save Draft** if you would like to save the source without retrieving items yet.
     * Click **Publish** or **Update** if the items from this source should be published.
 
-#### Hourly Updates
+### Hourly Updates
 
 Once an external source is added, it will be processed on an hourly schedule for new feed items.
 
-#### Additional Feed Attributes
+### Additional Feed Attributes
 
 While any standard RSS feed can be used, specific item elements in the feed can help categorize content and assign visibility.
 
@@ -36,7 +36,7 @@ While any standard RSS feed can be used, specific item elements in the feed can 
 
 These same item elements are provided in the RSS feeds produced by WNPA Syndication.
 
-##### Example item in an RSS feed
+#### Example item in an RSS feed
 
 ```
 <item>
@@ -55,11 +55,11 @@ These same item elements are provided in the RSS feeds produced by WNPA Syndicat
 </item>
 ```
 
-### Feed Items
+## Feed Items
 
 Feed items are the individual articles pulled in through the external source RSS feed and can be accessed under the **Feed Items** menu in WordPress.
 
-#### Central Feed
+### Central Feed
 
 Once items have been pulled in from external sources, they are immediately republished through a central feed.
 
@@ -68,7 +68,7 @@ Once items have been pulled in from external sources, they are immediately repub
 
 Only feed items that have a visibility of `public` will be shown in this central feed. To see items in a feed that have been marked as `private`, an access key is required.
 
-### Access Keys
+## Access Keys
 
 Access keys are used in combination with the central feed to gain access to items that have been marked as private. Each user has the ability to generate their own access key through their profile.
 
