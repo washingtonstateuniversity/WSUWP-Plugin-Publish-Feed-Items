@@ -22,6 +22,10 @@ External sources are added and managed through the corresponding menu option in 
     * Click **Save Draft** if you would like to save the source without retrieving items yet.
     * Click **Publish** or **Update** if the items from this source should be published.
 
+#### Hourly Updates
+
+Once an external source is added, it will be processed on an hourly schedule for new feed items.
+
 #### Additional Feed Attributes
 
 While any standard RSS feed can be used, specific item elements in the feed can help categorize content and assign visibility.
@@ -32,9 +36,24 @@ While any standard RSS feed can be used, specific item elements in the feed can 
 
 These same item elements are provided in the RSS feeds produced by WNPA Syndication.
 
-#### Hourly Updates
+##### Example item in an RSS feed
 
-Once an external source is added, it will be processed on an hourly schedule for new feed items.
+```
+<item>
+    <title>WSU partners with sustainable, quality food providers</title>
+    <link>http://news.wsu.edu/2014/02/10/wsu-partners-with-sustainable-quality-food-providers/</link>
+    <pubDate>Mon, 10 Feb 2014 12:00:00 +0000</pubDate>
+    <category><![CDATA[dining services]]></category>
+    <category><![CDATA[food]]></category>
+    <category><![CDATA[local]]></category>
+    <category><![CDATA[healthy]]></category>
+    <category domain="wnpalocation"><![CDATA[Pullman]]></category>
+    <guid isPermaLink="false">http://news.wsu.edu/2014/02/10/wsu-partners-with-sustainable-quality-food-providers/</guid>
+    <description><![CDATA[PULLMAN, Wash. – Dining Services supports the community by building a strong base of local and regional suppliers to provide quality food responsibly grown.]]></description>
+    <content:encoded><![CDATA[<p>Story content formatted in HTML</p>]]></content:encoded>
+    <dc:accessRights>public</dc:accessRights>
+</item>
+```
 
 ### Feed Items
 
