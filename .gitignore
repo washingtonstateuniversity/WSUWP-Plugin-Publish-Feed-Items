@@ -1,9 +1,13 @@
 .DS_Store
 .idea
 *sublime*
+
 wp-config.php
 wordpress
+
 wp-content/plugins/admin-color-schemes/
+wp-content/plugins/wsuwp-plugin-custom-css/
+wp-content/plugins/wsuwp-sso-authentication/
 wp-content/plugins/debug-bar/
 wp-content/plugins/debug-bar-cron/
 wp-content/uploads/
