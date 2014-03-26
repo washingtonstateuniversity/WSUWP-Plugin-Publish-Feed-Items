@@ -9,3 +9,7 @@
 */
 
 @import url("../spine/style.css");
+
+.recent-articles {
+	padding: 2em 2em 1em;
+}
