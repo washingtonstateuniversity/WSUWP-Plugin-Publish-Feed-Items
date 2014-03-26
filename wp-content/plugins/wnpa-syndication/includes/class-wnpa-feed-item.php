@@ -81,7 +81,7 @@ class WNPA_Feed_Item {
 			'capability_type'    => 'post',
 			'has_archive'        => 'feed-items',
 			'hierarchical'       => false,
-			'supports'           => array( 'title', 'editor', 'author', 'thumbnail', 'excerpt' ),
+			'supports'           => array( 'title', 'editor', 'excerpt' ),
 			'taxonomies'         => array( 'post_tag' )
 		);
 
