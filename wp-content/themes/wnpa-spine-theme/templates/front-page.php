@@ -41,9 +41,9 @@
 						<span class="recent-article-source"><?php echo $source->post_title; ?></span>
 						<p class="recent-article-excerpt"><?php the_excerpt(); ?></p>
 					</div>
-				<?php endwhile; endif;
+				<?php
+				endwhile; endif;
 				wp_reset_postdata(); ?>
-				</ul>
 			</div>
 		</section>
 	</main>
