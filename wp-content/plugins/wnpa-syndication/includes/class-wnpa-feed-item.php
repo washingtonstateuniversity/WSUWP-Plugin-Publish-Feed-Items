@@ -25,6 +25,8 @@ class WNPA_Feed_Item {
 		add_action( 'init',             array( $this, 'register_post_type'           ), 10    );
 		add_action( 'init',             array( $this, 'register_taxonomy_visibility' ), 10    );
 		add_action( 'init',             array( $this, 'register_taxonomy_location'   ), 10    );
+		add_action( 'wp', array( $this, 'feed_item_view' ), 10 );
+
 		add_action( 'rss2_item',        array( $this, 'rss_item_visibility'          ), 10    );
 		add_action( 'pre_get_posts',    array( $this, 'modify_feed_query'            ), 10    );
 
@@ -213,6 +215,17 @@ class WNPA_Feed_Item {
 		}
 
 		return;
+	}
+
+	/**
+	 * Redirect unauthenticated users to the home page when an attempt
+	 * to view an individual feed item is made.
+	 */
+	public function feed_item_view() {
+		if ( is_singular( 'wnpa_feed_item' ) && ! is_user_logged_in() ) {
+			wp_redirect( home_url() );
+			exit;
+		}
 	}
 }
 global $wnpa_feed_item;
