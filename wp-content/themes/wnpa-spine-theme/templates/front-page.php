@@ -39,11 +39,12 @@
 						<span class="recent-article-date"><?php echo get_the_date(); ?></span>
 						<span class="recent-article-author"><?php echo esc_html( $link_author ); ?></span>
 						<span class="recent-article-source"><?php echo $source->post_title; ?></span>
-						<p class="recent-article-excerpt"><?php the_excerpt(); ?></p>
+						<?php the_excerpt(); ?>
 					</div>
 				<?php
 				endwhile; endif;
 				wp_reset_postdata(); ?>
+				<span class="link-all-feed-items"><a href="<?php echo esc_url( home_url( '/feed-items' ) ); ?>">View all recent articles.</a></span>
 			</div>
 		</section>
 	</main>
