@@ -32,6 +32,7 @@ class WNPA_Feed_Item {
 
 		add_filter( 'the_category_rss', array( $this, 'rss_category_location'        ), 10, 1 );
 		add_filter( 'wp_dropdown_cats', array( $this, 'selective_taxonomy_dropdown'  ), 10, 1 );
+		add_filter( 'manage_wnpa_feed_item_posts_columns', array( $this, 'manage_posts_columns' ), 10, 1 );
 	}
 
 	/**
@@ -226,6 +227,22 @@ class WNPA_Feed_Item {
 			wp_redirect( home_url() );
 			exit;
 		}
+	}
+
+	/**
+	 * Alter post columns for the feed item type to include the source.
+	 *
+	 * @param $post_columns
+	 *
+	 * @return mixed
+	 */
+	public function manage_posts_columns( $post_columns ) {
+		unset( $post_columns['tags'] );
+		unset( $post_columns['date'] );
+		$post_columns['item_source'] = 'Source';
+		$post_columns['tags'] = 'Tags';
+		$post_columns['date'] = 'Date';
+		return $post_columns;
 	}
 }
 global $wnpa_feed_item;
