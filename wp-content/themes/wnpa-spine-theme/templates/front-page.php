@@ -26,7 +26,7 @@
 				<?php
 				$recent_articles = new WP_Query( array(
 					'post_type' => 'wnpa_feed_item',
-					'posts_per_page' => '4',
+					'posts_per_page' => '8',
 				));
 				if ( $recent_articles->have_posts() ) : while( $recent_articles->have_posts() ) : $recent_articles->the_post();
 					$link_url = get_post_meta( get_the_ID(), '_feed_item_link_url', true );
