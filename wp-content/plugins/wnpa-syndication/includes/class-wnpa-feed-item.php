@@ -130,7 +130,7 @@ class WNPA_Feed_Item {
 		);
 
 		$args = array(
-			'hierarchical' => false,
+			'hierarchical' => true,
 			'labels'       => $labels,
 			'show_ui'      => true,
 			'query_var'    => true,
