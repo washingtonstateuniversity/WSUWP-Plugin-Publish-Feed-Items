@@ -22,7 +22,7 @@
 
 		<section class="row single recent-articles">
 			<div class="column one">
-				<h2 class="article-title">Recent Articles</h2>
+				<h2 class="article-title">Today's Articles</h2>
 				<?php
 				$recent_articles = new WP_Query( array(
 					'post_type' => 'wnpa_feed_item',
