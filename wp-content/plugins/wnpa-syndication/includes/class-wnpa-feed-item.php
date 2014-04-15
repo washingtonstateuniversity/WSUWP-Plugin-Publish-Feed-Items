@@ -84,7 +84,7 @@ class WNPA_Feed_Item {
 			'has_archive'        => 'feed-items',
 			'hierarchical'       => false,
 			'supports'           => array( 'title', 'editor', 'excerpt' ),
-			'taxonomies'         => array( 'post_tag' )
+			'taxonomies'         => array( 'post_tag', 'category' )
 		);
 
 		register_post_type( $this->item_content_type, $args );
