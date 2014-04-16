@@ -5,10 +5,8 @@
 wp-config.php
 wordpress
 
-wp-content/plugins/admin-color-schemes/
-wp-content/plugins/wsuwp-plugin-custom-css/
-wp-content/plugins/wsuwp-sso-authentication/
-wp-content/plugins/debug-bar/
-wp-content/plugins/debug-bar-cron/
+wp-content/plugins
+!/wp-content/plugins/wnpa-syndication
+
 wp-content/uploads/
 wp-content/themes/spine
