@@ -43,25 +43,14 @@
 							</hgroup>
 						</header>
 
-						<?php if ( !is_singular() ) : ?>
-							<div class="article-summary">
-								<?php if ( has_post_thumbnail()) : ?>
-									<figure class="article-thumbnail"><?php the_post_thumbnail(array(132,132,true)); ?></figure>
-								<?php endif; ?>
-								<?php the_excerpt( __( 'More', 'spine' ) ); ?>
-							</div><!-- .entry-summary -->
-						<?php else : ?>
-							<div class="article-body">
-								<?php the_content(); ?>
-								<?php wp_link_pages( array( 'before' => '<div class="page-links">' . __( 'Pages:', 'spine' ), 'after' => '</div>' ) ); ?>
-							</div>
-						<?php endif; ?>
-
-						<?php if ( comments_open() && is_singular() ) : ?>
-							<blockquote class="comments">
-
-							</blockquote>
-						<?php endif; // comments_open() ?>
+						<div class="article-body">
+							<?php if ( has_post_thumbnail()) : ?>
+								<figure class="article-thumbnail"><?php the_post_thumbnail(array(132,132,true)); ?></figure>
+							<?php endif; ?>
+							<?php the_content(); ?>
+							<div class="clear"></div>
+							<?php wp_link_pages( array( 'before' => '<div class="page-links">' . __( 'Pages:', 'spine' ), 'after' => '</div>' ) ); ?>
+						</div>
 
 						<footer class="article-footer">
 
