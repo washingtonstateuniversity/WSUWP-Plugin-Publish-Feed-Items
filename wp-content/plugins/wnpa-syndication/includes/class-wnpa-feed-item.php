@@ -155,6 +155,11 @@ class WNPA_Feed_Item {
 		add_meta_box( 'wnpa_featured_item', 'Featured Article', array( $this, 'display_featured_item_meta_box' ), $this->item_content_type, 'normal' );
 	}
 
+	/**
+	 * Display a meta box to assign the featured article status to a feed item.
+	 * 
+	 * @param WP_Post $post Current feed item object.
+	 */
 	public function display_featured_item_meta_box( $post ) {
 		$featured_status = get_post_meta( $post->ID, '_wnpa_featured_article', true );
 
