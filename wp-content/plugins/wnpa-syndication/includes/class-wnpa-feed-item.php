@@ -27,6 +27,7 @@ class WNPA_Feed_Item {
 		add_action( 'init',             array( $this, 'register_taxonomy_location'   ), 10    );
 		add_action( 'wp', array( $this, 'feed_item_view' ), 10 );
 		add_action( 'add_meta_boxes', array( $this, 'add_meta_boxes' ), 10, 2 );
+		add_action( 'save_post', array( $this, 'save_post' ), 10, 2 );
 		add_action( 'rss2_item',        array( $this, 'rss_item_visibility'          ), 10    );
 		add_action( 'rss2_item', array( $this, 'rss_item_media_thumbnail' ), 10 );
 		add_action( 'pre_get_posts',    array( $this, 'modify_feed_query'            ), 10    );
@@ -166,6 +167,38 @@ class WNPA_Feed_Item {
 			<option value="normal" <?php selected( 'normal', $featured_status ); ?>>Not Featured</option>
 		</select>
 		<?php
+	}
+
+	/**
+	 * Save posted information from the featured item selection box.
+	 *
+	 * @param int     $post_id ID of the current feed item being edited.
+	 * @param WP_Post $post    Post object of the current feed item being edited.
+	 */
+	public function save_post( $post_id, $post ) {
+		if ( $this->item_content_type !== $post->post_type ) {
+			return;
+		}
+
+		if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
+			return;
+		}
+
+		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+			return;
+		}
+
+		if ( ! isset( $_POST['feed_item_featured'] ) ) {
+			return;
+		}
+
+		if ( ! in_array( $_POST['feed_item_featured'], array( 'normal', 'featured' ) ) ) {
+			$featured_status = 'normal';
+		} else {
+			$featured_status = $_POST['feed_item_featured'];
+		}
+
+		update_post_meta( $post_id, '_wnpa_featured_article', $featured_status );
 	}
 
 	/**
