@@ -24,28 +24,21 @@
 							</hgroup>
 							<hgroup class="source">
 								<?php
-								// Published on
-								/* $year = get_the_date('Y'); $day = get_the_date('j'); $month = get_the_date('F');
-								echo '<time class="article-date" datetime="'.get_the_date( 'c' ).'">';
-								echo '	<span class="month">'.$month.'</span>';
-								echo '	<span class="day">'.$day.'</span>';
-								echo '	<span class="year">'.$year.'</span>';
-								echo '</time>'; */
-								echo '<time class="article-date" datetime="'.get_the_date( 'c' ).'">';
-								echo the_date();
+								echo '<time class="article-date" datetime="' . get_the_date( 'c' ) . '">';
+								the_date();
 								echo '</time>';
 
 								// Published by
 								$author = get_the_author();
 								$author_articles = esc_url( get_author_posts_url( get_the_author_meta( 'ID' ) ) );
-								echo '<cite class="article-author" role="author"><a href="'.$author_articles.'">'.$author.'</a></cite>';
+								echo '<cite class="article-author" role="author"><a href="' . $author_articles . '">' . $author . '</a></cite>';
 								?>
 							</hgroup>
 						</header>
 
 						<div class="article-body">
 							<?php if ( has_post_thumbnail()) : ?>
-								<figure class="article-thumbnail"><?php the_post_thumbnail(array(132,132,true)); ?></figure>
+								<figure class="article-thumbnail"><?php the_post_thumbnail( 'teaser-image' ); ?></figure>
 							<?php endif; ?>
 							<?php the_content(); ?>
 							<div class="clear"></div>
