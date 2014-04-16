@@ -137,7 +137,7 @@ class WNPA_Feed_Item {
 			'query_var'    => true,
 			'rewrite'      => array( 'slug' => 'location' ),
 		);
-		register_taxonomy( $this->item_location_taxonomy, array( $this->item_content_type ), $args );
+		register_taxonomy( $this->item_location_taxonomy, array( $this->item_content_type, 'wnpa_external_source' ), $args );
 	}
 
 	/**
