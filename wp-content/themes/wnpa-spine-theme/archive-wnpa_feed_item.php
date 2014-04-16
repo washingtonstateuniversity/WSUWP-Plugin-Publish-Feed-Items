@@ -7,7 +7,7 @@
 			<?php get_template_part('parts/headers'); ?>
 
 			<section class="row single recent-articles">
-				<h1>Recent WNPA Syndication Items</h1>
+				<h1>Recent Articles</h1>
 
 				<div class="column one">
 

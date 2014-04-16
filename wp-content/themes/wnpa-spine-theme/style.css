@@ -32,3 +32,8 @@
 main > header.spine-bookmark {
 	left: 0;
 }
+
+section.halves.pager {
+	padding-left: 2em;
+	padding-right: 2em;
+}
