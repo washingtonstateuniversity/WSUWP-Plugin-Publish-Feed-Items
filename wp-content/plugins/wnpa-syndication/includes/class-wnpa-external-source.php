@@ -240,6 +240,11 @@ class WNPA_External_Source {
 
 		update_post_meta( $post_id, '_wnpa_feed_last_status', time() );
 
+		$default_source_location = wp_get_object_terms( $post_id, 'wnpa_item_location', array( 'fields' => 'ids' ) );
+		if ( is_wp_error( $default_source_location ) ) {
+			$default_source_location = array();
+		}
+
 		// Apply a filter to the default feed cache lifetime.
 		add_filter( 'wp_feed_cache_transient_lifetime', array( $this, 'modify_feed_cache' ) );
 
@@ -287,7 +292,7 @@ class WNPA_External_Source {
 				$visibility = $feed_item->get_item_tags( SIMPLEPIE_NAMESPACE_DC_11, 'accessRights' );
 				$categories = $feed_item->get_categories();
 
-				$locations = array();
+				$locations = $default_source_location;
 				$tags      = array();
 				// Split the provided categories into tags and locations.
 				foreach ( $categories as $category ) {
@@ -364,6 +369,7 @@ class WNPA_External_Source {
 				add_post_meta( $item_post_id, '_feed_item_author', $author );
 
 				wp_set_object_terms( $item_post_id, $tags,       'post_tag',             false );
+				$locations = array_unique( $locations );
 				wp_set_object_terms( $item_post_id, $locations,  'wnpa_item_location',   false );
 				wp_set_object_terms( $item_post_id, $visibility, 'wnpa_item_visibility', false );
 
