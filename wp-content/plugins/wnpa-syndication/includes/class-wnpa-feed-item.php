@@ -157,7 +157,7 @@ class WNPA_Feed_Item {
 
 	/**
 	 * Display a meta box to assign the featured article status to a feed item.
-	 * 
+	 *
 	 * @param WP_Post $post Current feed item object.
 	 */
 	public function display_featured_item_meta_box( $post ) {
