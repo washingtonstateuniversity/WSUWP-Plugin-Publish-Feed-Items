@@ -28,6 +28,7 @@ class WNPA_Feed_Item {
 		add_action( 'wp', array( $this, 'feed_item_view' ), 10 );
 
 		add_action( 'rss2_item',        array( $this, 'rss_item_visibility'          ), 10    );
+		add_action( 'rss2_item', array( $this, 'rss_item_media_thumbnail' ), 10 );
 		add_action( 'pre_get_posts',    array( $this, 'modify_feed_query'            ), 10    );
 
 		add_filter( 'the_category_rss', array( $this, 'rss_category_location'        ), 10, 1 );
@@ -156,6 +157,21 @@ class WNPA_Feed_Item {
 		}
 
 		?>	<dc:accessRights><?php echo esc_html( $visibility ); ?></dc:accessRights><?php
+	}
+
+	/**
+	 * Output a media:thumbnail element in the RSS feed if a featured image has been
+	 * assigned to a feed item.
+	 */
+	public function rss_item_media_thumbnail() {
+		global $post;
+
+		if ( has_post_thumbnail( $post->ID ) ) {
+			$thumbnail_url = wp_get_attachment_image_src( get_post_thumbnail_id( $post->ID ) );
+			if ( is_array( $thumbnail_url ) ) {
+				?> <media:thumbnail url="<?php echo esc_url( $thumbnail_url[0] ); ?>" /> <?php
+			}
+		}
 	}
 
 	/**
