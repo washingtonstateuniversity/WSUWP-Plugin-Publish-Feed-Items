@@ -22,11 +22,17 @@
 
 		<section class="row single recent-articles">
 			<div class="column one">
-				<h2 class="article-title">Today's Articles</h2>
+				<h2 class="article-title">Today's Featured Articles</h2>
 				<?php
 				$recent_articles = new WP_Query( array(
 					'post_type' => 'wnpa_feed_item',
 					'posts_per_page' => '8',
+					'meta_query' => array(
+						array(
+							'key' => '_wnpa_featured_article',
+							'value' => 'featured',
+						),
+					),
 				));
 				if ( $recent_articles->have_posts() ) : while( $recent_articles->have_posts() ) : $recent_articles->the_post();
 					$link_url = get_post_meta( get_the_ID(), '_feed_item_link_url', true );
