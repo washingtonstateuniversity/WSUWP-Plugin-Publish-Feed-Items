@@ -148,6 +148,10 @@ class WNPA_Feed_Item {
 	public function rss_item_visibility() {
 		global $post;
 
+		if ( $this->item_content_type !== $post->post_type ) {
+			return;
+		}
+
 		$visibility_terms = wp_get_object_terms( $post->ID, $this->item_visibility_taxonomy );
 
 		if ( empty( $visibility_terms ) ) {
@@ -165,6 +169,10 @@ class WNPA_Feed_Item {
 	 */
 	public function rss_item_media_thumbnail() {
 		global $post;
+
+		if ( $this->item_content_type !== $post->post_type ) {
+			return;
+		}
 
 		if ( has_post_thumbnail( $post->ID ) ) {
 			$thumbnail_url = wp_get_attachment_image_src( get_post_thumbnail_id( $post->ID ) );
