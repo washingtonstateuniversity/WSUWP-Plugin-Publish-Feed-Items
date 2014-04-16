@@ -1,14 +1,10 @@
-<?php
-
-get_header();
-
-?>
+<?php get_header(); ?>
 
 	<main>
 
 		<?php get_template_part('parts/headers'); ?>
 
-		<section class="row sidebar">
+		<section class="row single">
 
 			<div class="column one">
 
@@ -16,17 +12,9 @@ get_header();
 
 					<?php get_template_part( 'articles/post' ) ?>
 
-					<?php // get_comments( ); ?>
-
 				<?php endwhile; ?>
 
 			</div><!--/column-->
-
-			<div class="column two">
-
-				<?php get_sidebar(); ?>
-
-			</div><!--/column two-->
 
 		</section>
 
@@ -42,7 +30,5 @@ get_header();
 		</footer>
 
 	</main><!--/#page-->
-
-	<a href="<?php echo get_edit_post_link(); ?>" class="wp-edit-link">Edit</a>
 
 <?php get_footer(); ?>
