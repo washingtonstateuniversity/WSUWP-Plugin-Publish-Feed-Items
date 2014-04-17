@@ -9,7 +9,7 @@
 */
 
 @import url("../spine/style.css");
-
+@import url("assets/css/string.css");
 .recent-articles {
 	padding: 2em 2em 1em;
 }
@@ -32,7 +32,6 @@
 main > header.spine-bookmark {
 	left: 0;
 }
-
 section.halves.pager {
 	padding-left: 2em;
 	padding-right: 2em;

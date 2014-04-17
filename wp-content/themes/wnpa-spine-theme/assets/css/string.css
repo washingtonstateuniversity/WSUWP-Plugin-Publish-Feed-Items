@@ -1,0 +1,84 @@
+/**
+Title: css file to tie the WNPA CSS and WSU Spine themes together; specifically targeting the WNPA theme
+**/
+@import url(http://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,700italic,400,600,700);
+* {
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+ }
+body {
+ 	/*background-image: url('../img/dust-small.png');
+ 	background-size:95% 95%;*/
+ 	background-color:white;
+  }
+ main > h1, h2, h3, h4, h5, h6 {
+ 	font-family: 'open sans', lucida sans, sans serif;
+ 	 color:#383d42;
+ 	 margin-bottom:.4em;
+  }
+article p {
+ 	font-family: Georgia, "Times New Roman", Times, serif;
+ 	color:#666666;
+ 	font-size:1.4em;
+ 	line-height:1.6em;
+ 	margin-bottom:1em;
+ 	margin-top:1em;
+ }
+article ul, ol {
+	font-family: Georgia, "Times New Roman", Times, serif;
+ 	color:#666666;
+ 	font-size:1.1em;
+ 	line-height:1.6em;
+ 	margin-left:1.4em;
+}
+article p~ul {
+	margin-top:-1em;
+}
+article p~ol {
+	margin-top:-1em;
+}
+article ol li {
+	margin-bottom:-.5em;
+}
+article a {
+	text-decoration: underline;
+}
+.main-header {
+	background-color:#f9f9f9;
+	background-image: url('../img/homeBanner.jpg');
+	background-repeat: no-repeat;
+	background-size:auto, 150px;
+
+}
+.main-header .header-group {
+	display:none;
+}
+.article-header {
+}
+.article-header h1 {
+	font-family: 'open sans', lucida sans, sans serif;
+	color:#383d42;
+	font-weight: 700;
+	padding-top:20px;
+	padding-bottom:20px;
+	font-size: 3em;
+	text-transform: uppercase;
+	border-bottom: solid 1px #383d42;
+	margin-bottom:1em;
+}
+code {
+	font-size: 1.1em;
+	font-weight: 700;
+	color:black;
+}
+/**
+Title: Homepage
+Descripto: Targeting single elements related to the homepage
+**/
+
+.home .logos {
+	text-align: center;
+	width:772px;
+	margin-top:20px;
+	margin-bottom:40px;
+}
