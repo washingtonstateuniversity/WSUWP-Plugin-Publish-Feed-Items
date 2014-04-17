@@ -7,16 +7,23 @@ Title: css file to tie the WNPA CSS and WSU Spine themes together; specifically 
 	-moz-osx-font-smoothing: grayscale;
  }
 body {
- 	/*background-image: url('../img/dust-small.png');
- 	background-size:95% 95%;*/
+	background-image: url('../img/dust-small.png');
+	background-attachment: fixed;
+ 	background-size:60% 60%;
  	background-color:white;
   }
- main > h1, h2, h3, h4, h5, h6 {
+main > h1, h2, h3, h4, h5, h6 {
  	font-family: 'open sans', lucida sans, sans serif;
  	 color:#383d42;
- 	 margin-bottom:.4em;
   }
-article p {
+main article > h2, h3, h4, h5, h6 {
+	margin-bottom:-.5em;
+}
+.archive h3 {
+	font-size: 1.6em;
+	margin-bottom:.2em;
+}
+article p, .recent-article p {
  	font-family: Georgia, "Times New Roman", Times, serif;
  	color:#666666;
  	font-size:1.4em;
@@ -24,12 +31,24 @@ article p {
  	margin-bottom:1em;
  	margin-top:1em;
  }
+.archive p {
+	font-size: 1.3em !important;
+}
 article ul, ol {
 	font-family: Georgia, "Times New Roman", Times, serif;
  	color:#666666;
- 	font-size:1.1em;
+ 	font-size:1.2em;
  	line-height:1.6em;
  	margin-left:1.4em;
+}
+article ol ul li {
+	font-size: .875em;
+}
+article ul li code {
+	font-size: .875em;
+}
+article ol ul li code {
+	font-size: .875em;
 }
 article p~ul {
 	margin-top:-1em;
@@ -40,36 +59,68 @@ article p~ol {
 article ol li {
 	margin-bottom:-.5em;
 }
-article a {
+article a,.archive .recent-articles a {
 	text-decoration: underline;
 }
 .main-header {
+	height:190px;
 	background-color:#f9f9f9;
 	background-image: url('../img/homeBanner.jpg');
 	background-repeat: no-repeat;
-	background-size:auto, 150px;
-
-}
+	background-size:auto, 100%;
+	background-position: -800px, 0px;
+	}
 .main-header .header-group {
 	display:none;
 }
 .article-header {
 }
-.article-header h1 {
-	font-family: 'open sans', lucida sans, sans serif;
+.article-header h1, .archive .recent-articles h1 {
 	color:#383d42;
 	font-weight: 700;
-	padding-top:20px;
 	padding-bottom:20px;
 	font-size: 3em;
 	text-transform: uppercase;
 	border-bottom: solid 1px #383d42;
 	margin-bottom:1em;
+	margin-top:1.8em;
+}
+.archive .recent-article {
+	margin-bottom:2em;
+	padding-bottom:1em;
+	border-bottom: 1px solid #eff0f1;
+}
+.recent-article > .recent-article-date, .recent-article-author, .recent-article-source {
+	font-weight: 700;
+	font-family: 'open sans', lucida sans, sans serif;
 }
 code {
 	font-size: 1.1em;
 	font-weight: 700;
 	color:black;
+}
+.codeBlock {
+	display:inline-block;
+	width:772px;
+	white-space: nowrap;
+	overflow: scroll;
+	overflow: -moz-scrollbars-horizontal; 
+	overflow: -webkit-scrollbars-horizontal;
+	overflow-x: scroll;
+	border:1px solid #eff0f1;
+	padding:.8em;
+	background-color: #f9f9f9;
+	margin-bottom:1em;
+	margin-top:1em;
+}
+::-webkit-scrollbar {
+    -webkit-appearance: none;
+    width: 7px;
+}
+::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    background-color: rgba(0,0,0,.5);
+    -webkit-box-shadow: 0 0 1px rgba(255,255,255,.5);
 }
 /**
 Title: Homepage
@@ -79,6 +130,10 @@ Descripto: Targeting single elements related to the homepage
 .home .logos {
 	text-align: center;
 	width:772px;
-	margin-top:20px;
-	margin-bottom:40px;
+	margin-top:70px;
+	margin-bottom:20px;
+}
+.home .logos img:first-child {
+	display:inline-block;
+	margin-right:3em;
 }
