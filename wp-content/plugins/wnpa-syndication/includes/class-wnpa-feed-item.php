@@ -350,13 +350,16 @@ class WNPA_Feed_Item {
 
 		if ( 'item_location' === $column_name ) {
 			$item_locations = wp_get_object_terms( $post_id, $this->item_location_taxonomy );
-			$item_locations = wp_list_pluck( $item_locations, 'name' );
-			if ( ! empty( $item_locations ) ) {
-				$item_locations = implode( ', ', $item_locations );
-			} else {
-				$item_locations = 'Not assigned';
+			$locations = array();
+			foreach( $item_locations as $item_location ) {
+				$locations[] = '<a href="' . esc_url( admin_url( 'edit.php?wnpa_item_location=' . $item_location->slug . '&post_type=wnpa_feed_item' ) ) . '">'. $item_location->name . '</a>';
 			}
-			echo $item_locations;
+
+			if ( ! empty( $locations ) ) {
+				echo implode( ', ', $locations );
+			} else {
+				echo 'Not assigned';
+			}
 		}
 	}
 

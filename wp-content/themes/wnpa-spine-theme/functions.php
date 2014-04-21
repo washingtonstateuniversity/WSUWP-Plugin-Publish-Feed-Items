@@ -12,3 +12,12 @@ function wnpa_alter_menu() {
 	unset( $menu[26] );
 	unset( $menu[25] );
 }
+
+add_filter( 'excerpt_more', 'wnpa_excerpt_more' );
+function wnpa_excerpt_more() {
+	global $post;
+
+	$link_url = get_post_meta( $post->ID, '_feed_item_link_url', true );
+
+	return '<a class="moretag" href="' . esc_url( $link_url ) . '">More</a>';
+}
