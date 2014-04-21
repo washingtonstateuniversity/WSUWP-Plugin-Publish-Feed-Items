@@ -331,7 +331,7 @@ class WNPA_Feed_Item {
 		unset( $post_columns['tags'] );
 		unset( $post_columns['date'] );
 		$post_columns['item_source'] = 'Source';
-		$post_columns['tags'] = 'Tags';
+		$post_columns['item_location'] = 'Location';
 		$post_columns['date'] = 'Date';
 		return $post_columns;
 	}
@@ -345,7 +345,17 @@ class WNPA_Feed_Item {
 			} else {
 				echo 'Manual entry';
 			}
+		}
 
+		if ( 'item_location' === $column_name ) {
+			$item_locations = wp_get_object_terms( $post_id, $this->item_location_taxonomy );
+			$item_locations = wp_list_pluck( $item_locations, 'name' );
+			if ( ! empty( $item_locations ) ) {
+				$item_locations = implode( ', ', $item_locations );
+			} else {
+				$item_locations = 'Not assigned';
+			}
+			echo $item_locations;
 		}
 	}
 }
