@@ -21,3 +21,6 @@ function wnpa_excerpt_more() {
 
 	return '<a class="moretag" href="' . esc_url( $link_url ) . '">More</a>';
 }
+
+// Allow WP authentication in addition to WSU Network ID auth.
+add_filter( 'wsuwp_sso_allow_wp_auth', '__return_true' );
