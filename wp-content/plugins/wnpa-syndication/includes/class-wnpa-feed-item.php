@@ -31,6 +31,7 @@ class WNPA_Feed_Item {
 		add_action( 'rss2_item',        array( $this, 'rss_item_visibility'          ), 10    );
 		add_action( 'rss2_item', array( $this, 'rss_item_media_thumbnail' ), 10 );
 		add_action( 'pre_get_posts',    array( $this, 'modify_feed_query'            ), 10    );
+		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ), 10 );
 
 		add_filter( 'the_category_rss', array( $this, 'rss_category_location'        ), 10, 1 );
 		add_filter( 'wp_dropdown_cats', array( $this, 'selective_taxonomy_dropdown'  ), 10, 1 );
@@ -356,6 +357,12 @@ class WNPA_Feed_Item {
 				$item_locations = 'Not assigned';
 			}
 			echo $item_locations;
+		}
+	}
+
+	public function admin_enqueue_scripts() {
+		if ( 'edit-wnpa_feed_item' === get_current_screen()->id ) {
+			wp_enqueue_style( 'wnpa-feed-item-list', plugins_url( '../css/feed-item.css', __FILE__ ) );
 		}
 	}
 }
