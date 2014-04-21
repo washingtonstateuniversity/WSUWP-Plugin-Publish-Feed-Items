@@ -1,0 +1,9 @@
+.widefat td, .widefat td p, .widefat td ol, .widefat td ul {
+	font-size: 12px;
+	line-height: 1.2em;
+}
+
+
+.widefat td, .widefat th {
+	padding: 5px 5px;
+}

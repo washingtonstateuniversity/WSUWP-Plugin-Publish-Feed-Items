@@ -1,12 +1,9 @@
 .DS_Store
-.idea
-*sublime*
+/.idea
+/*sublime*
 
-wp-config.php
-wordpress
+/wp-config.php
+/wordpress
 
-wp-content/plugins
-!/wp-content/plugins/wnpa-syndication
-
-wp-content/uploads/
-wp-content/themes/spine
+/wp-content/uploads/
+/wp-content/themes/spine

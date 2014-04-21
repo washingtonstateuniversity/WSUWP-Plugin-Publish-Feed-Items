@@ -31,6 +31,7 @@ class WNPA_Feed_Item {
 		add_action( 'rss2_item',        array( $this, 'rss_item_visibility'          ), 10    );
 		add_action( 'rss2_item', array( $this, 'rss_item_media_thumbnail' ), 10 );
 		add_action( 'pre_get_posts',    array( $this, 'modify_feed_query'            ), 10    );
+		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ), 10 );
 
 		add_filter( 'the_category_rss', array( $this, 'rss_category_location'        ), 10, 1 );
 		add_filter( 'wp_dropdown_cats', array( $this, 'selective_taxonomy_dropdown'  ), 10, 1 );
@@ -331,7 +332,7 @@ class WNPA_Feed_Item {
 		unset( $post_columns['tags'] );
 		unset( $post_columns['date'] );
 		$post_columns['item_source'] = 'Source';
-		$post_columns['tags'] = 'Tags';
+		$post_columns['item_location'] = 'Location';
 		$post_columns['date'] = 'Date';
 		return $post_columns;
 	}
@@ -345,7 +346,23 @@ class WNPA_Feed_Item {
 			} else {
 				echo 'Manual entry';
 			}
+		}
 
+		if ( 'item_location' === $column_name ) {
+			$item_locations = wp_get_object_terms( $post_id, $this->item_location_taxonomy );
+			$item_locations = wp_list_pluck( $item_locations, 'name' );
+			if ( ! empty( $item_locations ) ) {
+				$item_locations = implode( ', ', $item_locations );
+			} else {
+				$item_locations = 'Not assigned';
+			}
+			echo $item_locations;
+		}
+	}
+
+	public function admin_enqueue_scripts() {
+		if ( 'edit-wnpa_feed_item' === get_current_screen()->id ) {
+			wp_enqueue_style( 'wnpa-feed-item-list', plugins_url( '../css/feed-item.css', __FILE__ ) );
 		}
 	}
 }
