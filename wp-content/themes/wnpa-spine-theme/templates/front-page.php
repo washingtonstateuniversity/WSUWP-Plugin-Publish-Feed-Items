@@ -22,6 +22,7 @@
 
 		<section class="row single recent-articles">
 			<div class="column one">
+			<article>
 		<h2 class="article-title">Today's Featured Articles</h2>
 				<?php
 				$recent_articles = new WP_Query( array(
@@ -52,6 +53,7 @@
 				endwhile; endif;
 				wp_reset_postdata(); ?>
 				<span class="link-all-feed-items"><a href="<?php echo esc_url( home_url( '/feed-items' ) ); ?>">View all recent articles.</a></span>
+			</article>
 			</div>
 				</section>
 	</main>

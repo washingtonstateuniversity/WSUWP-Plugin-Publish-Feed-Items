@@ -126,6 +126,44 @@ code {
 .link-all-feed-items a {
 	text-decoration: underline;
 }
+.article-footer {
+	color:#383d42;
+}
+.article-footer a {
+	color:gray;
+}
+.article-footer a:hover {
+	color:#981e32;
+}
+.article-footer > .editors {
+	margin:1em 0em 1em 0;
+}
+.article-footer > .editors a {
+	color:blue;
+	display:block;
+	text-align: center;
+	padding:.5em;
+	border:1px solid lightgray;
+	background-color:lightgray;
+}
+.article-footer > .editors a:hover {
+	color:#981e32;
+	background-color:white;
+	border:1px solid lightgray;
+}
+.archive-meta-nav {
+	padding-bottom:3em;
+}
+.nav-previous {
+	float:left;
+	display:block;
+	width:30%;
+}
+.nav-next {
+	display:block;
+	width:30%;
+	float:right;
+}
 /**
 Title: Homepage
 Descripto: Targeting single elements related to the homepage
@@ -143,17 +181,14 @@ Descripto: Targeting single elements related to the homepage
 	display:inline-block;
 	margin-right:3em;
 }
-.home .recent-articles article {
-	padding-left:0;
-}
 .home .recent-articles h2 {
 	font-size: 2.1em;
 	padding-bottom:.5em;
-	padding-top:1em;
+	margin-bottom:1em;
 	border-bottom:1px solid #383d42;
 }
 .home .recent-article h3 {
-	font-size: 1.6em;
+	font-size: 1.8em;
 	padding-bottom:.875em;
 }
 .home .recent-article p {

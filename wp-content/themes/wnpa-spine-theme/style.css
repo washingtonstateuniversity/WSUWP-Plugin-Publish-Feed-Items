@@ -10,29 +10,3 @@
 
 @import url("../spine/style.css");
 @import url("assets/css/string.css");
-.recent-articles {
-	padding: 2em 2em 1em;
-}
-
-.recent-article-title {
-	font-size: 16px;
-}
-
-.recent-article-date,
-.recent-article-author,
-.recent-article-source {
-	font-size: 13px;
-}
-
-.recent-article p {
-	font-size: 12px;
-	margin-top: 8px;
-}
-
-main > header.spine-bookmark {
-	left: 0;
-}
-section.halves.pager {
-	padding-left: 2em;
-	padding-right: 2em;
-}
