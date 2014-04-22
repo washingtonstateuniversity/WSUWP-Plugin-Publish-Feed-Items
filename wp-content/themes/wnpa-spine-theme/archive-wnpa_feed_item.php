@@ -18,11 +18,13 @@
 						$source = get_post( absint( $source_id ) );
 					?>
 						<div class="recent-article">
+						<article>
 							<h3 class="recent-article-title"><a href="<?php echo esc_url( $link_url ); ?>"><?php the_title(); ?></a></h3>
 							<span class="recent-article-date"><?php echo get_the_date(); ?></span>
 							<span class="recent-article-author"><?php echo esc_html( $link_author ); ?></span>
 							<span class="recent-article-source"><?php echo $source->post_title; ?></span>
 							<?php the_excerpt(); ?>
+							</article>
 						</div>
 
 					<?php endwhile; ?>

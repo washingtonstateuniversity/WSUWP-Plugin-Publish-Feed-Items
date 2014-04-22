@@ -93,6 +93,7 @@ article a,.archive .recent-articles a {
 .recent-article > .recent-article-date, .recent-article-author, .recent-article-source {
 	font-weight: 700;
 	font-family: 'open sans', lucida sans, sans serif;
+	line-height: .700em !important;
 }
 code {
 	font-size: 1.1em;
@@ -122,6 +123,9 @@ code {
     background-color: rgba(0,0,0,.5);
     -webkit-box-shadow: 0 0 1px rgba(255,255,255,.5);
 }
+.link-all-feed-items a {
+	text-decoration: underline;
+}
 /**
 Title: Homepage
 Descripto: Targeting single elements related to the homepage
@@ -129,11 +133,34 @@ Descripto: Targeting single elements related to the homepage
 
 .home .logos {
 	text-align: center;
-	width:772px;
+	width:100%;
 	margin-top:70px;
-	margin-bottom:20px;
+	}
+.home .logos img {
+	margin-bottom:40px;
 }
 .home .logos img:first-child {
 	display:inline-block;
 	margin-right:3em;
+}
+.home .recent-articles article {
+	padding-left:0;
+}
+.home .recent-articles h2 {
+	font-size: 2.1em;
+	padding-bottom:.5em;
+	padding-top:1em;
+	border-top:1px solid #383d42;
+}
+.home .recent-article h3 {
+	font-size: 1.6em;
+	padding-bottom:.875em;
+}
+.home .recent-article p {
+	font-size: 1.1em;
+	padding-bottom:2em;
+	border-bottom: solid 1px #eff0f1;
+}
+.home .recent-article a {
+	text-decoration: underline;
 }

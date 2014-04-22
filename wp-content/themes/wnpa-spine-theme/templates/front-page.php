@@ -22,7 +22,7 @@
 
 		<section class="row single recent-articles">
 			<div class="column one">
-				<h2 class="article-title">Today's Featured Articles</h2>
+		<h2 class="article-title">Today's Featured Articles</h2>
 				<?php
 				$recent_articles = new WP_Query( array(
 					'post_type' => 'wnpa_feed_item',
@@ -40,19 +40,20 @@
 					$source_id = get_post_meta( get_the_ID(), '_feed_item_source', true );
 					$source = get_post( absint( $source_id ) );
 					?>
-					<div class="recent-article">
+					<article class="recent-article">
+					
 						<h3 class="recent-article-title"><a href="<?php echo esc_url( $link_url ); ?>"><?php the_title(); ?></a></h3>
 						<span class="recent-article-date"><?php echo get_the_date(); ?></span>
 						<span class="recent-article-author"><?php echo esc_html( $link_author ); ?></span>
 						<span class="recent-article-source"><?php echo $source->post_title; ?></span>
 						<?php the_excerpt(); ?>
-					</div>
+					</article>
 				<?php
 				endwhile; endif;
 				wp_reset_postdata(); ?>
 				<span class="link-all-feed-items"><a href="<?php echo esc_url( home_url( '/feed-items' ) ); ?>">View all recent articles.</a></span>
 			</div>
-		</section>
+				</section>
 	</main>
 
 <?php get_footer(); ?>
