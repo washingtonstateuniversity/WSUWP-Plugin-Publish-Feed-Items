@@ -6,7 +6,6 @@
 	<div class="column one">
 		<?php while ( have_posts() ) : the_post(); ?>
 			<article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
-
 				<header class="article-header">
 					<hgroup>
 						<?php if ( is_single() ) : ?>
@@ -17,6 +16,9 @@
 							</h2>
 						<?php endif; // is_single() or in_a_relationship() ?>
 					</hgroup>
+					<?php if ( has_post_thumbnail()) : ?>
+						<figure class="article-thumbnail"><?php the_post_thumbnail( 'header-image' ); ?></figure>
+					<?php endif; ?>
 					<hgroup class="source">
 						<?php
 						echo '<time class="article-date" datetime="' . get_the_date( 'c' ) . '">';
@@ -31,9 +33,6 @@
 					</hgroup>
 				</header>
 				<div class="article-body">
-					<?php if ( has_post_thumbnail()) : ?>
-						<figure class="article-thumbnail"><?php the_post_thumbnail( 'teaser-image' ); ?></figure>
-					<?php endif; ?>
 					<?php the_content(); ?>
 					<div class="clear"></div>
 				</div>
