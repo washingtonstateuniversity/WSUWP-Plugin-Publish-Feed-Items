@@ -24,3 +24,11 @@ function wnpa_excerpt_more() {
 
 // Allow WP authentication in addition to WSU Network ID auth.
 add_filter( 'wsuwp_sso_allow_wp_auth', '__return_true' );
+
+add_filter( 'login_message', 'wnpa_theme_login_message', 11, 1 );
+function wnpa_theme_login_message( $login_message ) {
+
+	$additional_text = '<div class="registration-guide" style="margin-top: 10px; margin-bottom: 10px;">An account with the WNPA News Service is required to login on this page. Please see instructions on the <a href="' . esc_url( home_url() ) . '">main page</a> for requesting up an account.</div>';
+
+	return $login_message . $additional_text;
+}
