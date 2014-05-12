@@ -7,3 +7,11 @@
 .widefat td, .widefat th {
 	padding: 5px 5px;
 }
+
+#wnpa_item_visibility-adder {
+	display: none;
+}
+
+#wnpa_item_visibility-tabs .hide-if-no-js {
+	display: none;
+}
