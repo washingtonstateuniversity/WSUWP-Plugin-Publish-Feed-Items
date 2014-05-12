@@ -13,14 +13,19 @@
 							$link_author = 'By ' . get_the_author();
 						}
 						$source_id = get_post_meta( get_the_ID(), '_feed_item_source', true );
-						$source = get_post( absint( $source_id ) );
+						if ( empty( $source_id ) ) {
+							$source_title = 'Manual Entry';
+						} else {
+							$source = get_post( absint( $source_id ) );
+							$source_title = $source->post_title;
+						}
 					?>
 						<div class="recent-article">
 						<article>
 							<h3 class="recent-article-title"><a href="<?php echo esc_url( $link_url ); ?>"><?php the_title(); ?></a></h3>
 							<span class="recent-article-date"><?php echo get_the_date(); ?></span>
 							<span class="recent-article-author"><?php echo esc_html( $link_author ); ?></span>
-							<span class="recent-article-source"><?php echo $source->post_title; ?></span>
+							<span class="recent-article-source"><?php echo $source_title; ?></span>
 							<?php the_excerpt(); ?>
 							</article>
 						</div>
