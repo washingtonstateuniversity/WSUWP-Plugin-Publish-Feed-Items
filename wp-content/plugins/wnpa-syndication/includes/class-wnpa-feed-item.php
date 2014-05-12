@@ -378,7 +378,7 @@ class WNPA_Feed_Item {
 	}
 
 	public function admin_enqueue_scripts() {
-		if ( 'edit-wnpa_feed_item' === get_current_screen()->id ) {
+		if ( in_array( get_current_screen()->id, array( 'wnpa_feed_item', 'edit-wnpa_feed_item' ) ) ) {
 			wp_enqueue_style( 'wnpa-feed-item-list', plugins_url( '../css/feed-item.css', __FILE__ ) );
 		}
 	}
