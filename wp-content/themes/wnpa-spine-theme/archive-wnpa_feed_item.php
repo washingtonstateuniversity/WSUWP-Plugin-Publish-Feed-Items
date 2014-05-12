@@ -9,6 +9,9 @@
 					<?php while ( have_posts() ) : the_post();
 						$link_url = get_post_meta( get_the_ID(), '_feed_item_link_url', true );
 						$link_author = ucwords( strtolower( get_post_meta( get_the_ID(), '_feed_item_author', true ) ) );
+						if ( ! $link_author ) {
+							$link_author = 'By ' . get_the_author();
+						}
 						$source_id = get_post_meta( get_the_ID(), '_feed_item_source', true );
 						$source = get_post( absint( $source_id ) );
 					?>
