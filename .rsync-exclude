@@ -1,8 +1,0 @@
-.git
-.gitignore
-wp-config.php
-wordpress
-wp-content/uploads
-wp-content/plugins/wsuwp-plugin-custom-css
-wp-content/plugins/wsuwp-sso-authentication
-wp-content/themes/spine
