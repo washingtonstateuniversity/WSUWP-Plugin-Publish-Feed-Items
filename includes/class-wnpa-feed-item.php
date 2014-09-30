@@ -167,8 +167,14 @@ class WNPA_Feed_Item {
 		if ( 'featured' !== $featured_status ) {
 			$featured_status = 'normal';
 		}
+
+		if ( ! current_user_can( 'administrator' ) ) {
+			$disabled = 'disabled="disabled"';
+		} else {
+			$disabled = '';
+		}
 		?>
-		<select name="feed_item_featured">
+		<select name="feed_item_featured" <?php echo $disabled; ?>>
 			<option value="featured" <?php selected( 'featured', $featured_status ); ?>>Featured</option>
 			<option value="normal" <?php selected( 'normal', $featured_status ); ?>>Not Featured</option>
 		</select>
@@ -204,7 +210,9 @@ class WNPA_Feed_Item {
 			$featured_status = $_POST['feed_item_featured'];
 		}
 
-		update_post_meta( $post_id, '_wnpa_featured_article', $featured_status );
+		if ( current_user_can( 'administrator' ) ) {
+			update_post_meta( $post_id, '_wnpa_featured_article', $featured_status );
+		}
 	}
 
 	/**
