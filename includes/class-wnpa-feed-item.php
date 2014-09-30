@@ -175,6 +175,7 @@ class WNPA_Feed_Item {
 			$disabled = '';
 		}
 
+		wp_nonce_field( 'save-feed-item-featured', '_wnpa_featured_nonce' );
 		?>
 		<select name="feed_item_featured" <?php echo $disabled; ?>>
 			<option value="featured" <?php selected( 'featured', $featured_status ); ?>>Featured</option>
@@ -221,7 +222,7 @@ class WNPA_Feed_Item {
 			return;
 		}
 
-		if ( isset( $_POST['feed_item_featured'] ) ) {
+		if ( isset( $_POST['_wnpa_featured_nonce'] ) && wp_verify_nonce( $_POST['_wnpa_featured_nonce'], 'save-feed-item-featured' ) && isset( $_POST['feed_item_featured'] ) ) {
 			if ( !in_array( $_POST[ 'feed_item_featured' ], array( 'normal', 'featured' ) ) ) {
 				$featured_status = 'normal';
 			} else {
