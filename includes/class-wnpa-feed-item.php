@@ -174,6 +174,7 @@ class WNPA_Feed_Item {
 		} else {
 			$disabled = '';
 		}
+
 		?>
 		<select name="feed_item_featured" <?php echo $disabled; ?>>
 			<option value="featured" <?php selected( 'featured', $featured_status ); ?>>Featured</option>
@@ -191,6 +192,7 @@ class WNPA_Feed_Item {
 		$item_source = get_post_meta( $post->ID, '_feed_item_source_manual', true );
 		$item_author = get_post_meta( $post->ID, '_feed_item_author', true );
 
+		wp_nonce_field( 'save-feed-item-byline', '_wnpa_byline_nonce' );
 		?>
 		<label for="feed_item_author">Feed Item Author:</label>
 		<input name="feed_item_author" type="text" id="feed_item_author" value="<?php echo esc_attr( $item_author ); ?>" />
@@ -238,17 +240,19 @@ class WNPA_Feed_Item {
 			}
 		}
 
-		if ( isset( $_POST['feed_item_source'] ) ) {
-			$source = esc_html( $_POST['feed_item_source'] );
-			if ( ! empty( $source ) ) {
-				update_post_meta( $post_id, '_feed_item_source_manual', $source );
+		if ( isset( $_POST['_wnpa_byline_nonce'] ) && wp_verify_nonce( $_POST['_wnpa_byline_nonce'], 'save-feed-item-byline' ) ) {
+			if ( isset( $_POST['feed_item_source'] ) ) {
+				$source = esc_html( $_POST['feed_item_source'] );
+				if ( ! empty( $source ) ) {
+					update_post_meta( $post_id, '_feed_item_source_manual', $source );
+				}
 			}
-		}
 
-		if ( isset( $_POST['feed_item_author'] ) ) {
-			$author = esc_html( $_POST['feed_item_author'] );
-			if ( ! empty( $author ) ) {
-				update_post_meta( $post_id, '_feed_item_author', $author );
+			if ( isset( $_POST['feed_item_author'] ) ) {
+				$author = esc_html( $_POST['feed_item_author'] );
+				if ( ! empty( $author ) ) {
+					update_post_meta( $post_id, '_feed_item_author', $author );
+				}
 			}
 		}
 	}
