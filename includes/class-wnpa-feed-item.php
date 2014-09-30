@@ -154,6 +154,7 @@ class WNPA_Feed_Item {
 		}
 
 		add_meta_box( 'wnpa_featured_item', 'Featured Article', array( $this, 'display_featured_item_meta_box' ), $this->item_content_type, 'normal' );
+		add_meta_box( 'wnpa_byline', 'Byline Information', array( $this, 'display_byline_meta_box' ), $this->item_content_type, 'normal' );
 	}
 
 	/**
@@ -178,6 +179,24 @@ class WNPA_Feed_Item {
 			<option value="featured" <?php selected( 'featured', $featured_status ); ?>>Featured</option>
 			<option value="normal" <?php selected( 'normal', $featured_status ); ?>>Not Featured</option>
 		</select>
+		<?php
+	}
+
+	/**
+	 * Display a meta box to capture manual entry information for a feed item.
+	 *
+	 * @param WP_Post $post Current post being edited.
+	 */
+	public function display_byline_meta_box( $post ) {
+		$item_source = get_post_meta( $post->ID, '_feed_item_source_manual', true );
+		$item_author = get_post_meta( $post->ID, '_feed_item_author', true );
+
+		?>
+		<label for="feed_item_author">Feed Item Author:</label>
+		<input name="feed_item_author" type="text" id="feed_item_author" value="<?php echo esc_attr( $item_author ); ?>" />
+		<br />
+		<label for="feed_item_source">Feed Item Source:</label>
+		<input name="feed_item_source" type="text" id="feed_item_source" value="<?php echo esc_attr( $item_source ); ?>" />
 		<?php
 	}
 
@@ -216,6 +235,20 @@ class WNPA_Feed_Item {
 			$terms = wp_get_post_terms( $post_id, $this->item_visibility_taxonomy );
 			if ( empty( $terms ) ) {
 				wp_set_object_terms( $post_id, 'Public', $this->item_visibility_taxonomy );
+			}
+		}
+
+		if ( isset( $_POST['feed_item_source'] ) ) {
+			$source = esc_html( $_POST['feed_item_source'] );
+			if ( ! empty( $source ) ) {
+				update_post_meta( $post_id, '_feed_item_source_manual', $source );
+			}
+		}
+
+		if ( isset( $_POST['feed_item_author'] ) ) {
+			$author = esc_html( $_POST['feed_item_author'] );
+			if ( ! empty( $author ) ) {
+				update_post_meta( $post_id, '_feed_item_author', $author );
 			}
 		}
 	}
@@ -354,11 +387,16 @@ class WNPA_Feed_Item {
 	public function manage_posts_custom_column( $column_name, $post_id ) {
 		if ( 'item_source' === $column_name ) {
 			$source_id = get_post_meta( $post_id, '_feed_item_source', true );
-			if ( $source_id ) {
-				$source = get_post( absint( $source_id ) );
+			if ( absint( $source_id ) > 0 ) {
+				$source = get_post( $source_id );
 				echo '<a href="' . esc_url( admin_url( 'post.php?post=' . $source_id . '&action=edit' ) ) . '">' . esc_html( $source->post_title ) . '</a>';
 			} else {
-				echo 'Manual entry';
+				$source = get_post_meta( $post_id, '_feed_item_source_manual', true );
+				if ( ! empty( $source ) ) {
+					echo esc_html( $source );
+				} else {
+					echo 'Manual entry';
+				}
 			}
 		}
 
