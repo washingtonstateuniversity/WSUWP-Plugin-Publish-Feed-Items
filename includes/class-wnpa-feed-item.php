@@ -200,18 +200,23 @@ class WNPA_Feed_Item {
 			return;
 		}
 
-		if ( ! isset( $_POST['feed_item_featured'] ) ) {
-			return;
+		if ( isset( $_POST['feed_item_featured'] ) ) {
+			if ( !in_array( $_POST[ 'feed_item_featured' ], array( 'normal', 'featured' ) ) ) {
+				$featured_status = 'normal';
+			} else {
+				$featured_status = $_POST[ 'feed_item_featured' ];
+			}
+
+			if ( current_user_can( 'administrator' ) ) {
+				update_post_meta( $post_id, '_wnpa_featured_article', $featured_status );
+			}
 		}
 
-		if ( ! in_array( $_POST['feed_item_featured'], array( 'normal', 'featured' ) ) ) {
-			$featured_status = 'normal';
-		} else {
-			$featured_status = $_POST['feed_item_featured'];
-		}
-
-		if ( current_user_can( 'administrator' ) ) {
-			update_post_meta( $post_id, '_wnpa_featured_article', $featured_status );
+		if ( 'publish' === $post->post_status ) {
+			$terms = wp_get_post_terms( $post_id, $this->item_visibility_taxonomy );
+			if ( empty( $terms ) ) {
+				wp_set_object_terms( $post_id, 'Public', $this->item_visibility_taxonomy );
+			}
 		}
 	}
 
