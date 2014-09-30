@@ -286,7 +286,7 @@ class WNPA_External_Source {
 
 				$link       = $feed_item->get_link();
 				$title      = $feed_item->get_title();
-				$content    = $feed_item->get_description();
+				$content    = $feed_item->get_content();
 				$date       = $feed_item->get_date( 'Y-m-d H:i:s' );
 				$author     = $feed_item->get_author();
 				$visibility = $feed_item->get_item_tags( SIMPLEPIE_NAMESPACE_DC_11, 'accessRights' );

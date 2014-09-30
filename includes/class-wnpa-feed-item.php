@@ -154,6 +154,7 @@ class WNPA_Feed_Item {
 		}
 
 		add_meta_box( 'wnpa_featured_item', 'Featured Article', array( $this, 'display_featured_item_meta_box' ), $this->item_content_type, 'normal' );
+		add_meta_box( 'wnpa_byline', 'Byline Information', array( $this, 'display_byline_meta_box' ), $this->item_content_type, 'normal' );
 	}
 
 	/**
@@ -167,11 +168,38 @@ class WNPA_Feed_Item {
 		if ( 'featured' !== $featured_status ) {
 			$featured_status = 'normal';
 		}
+
+		if ( ! current_user_can( 'administrator' ) ) {
+			$disabled = 'disabled="disabled"';
+		} else {
+			$disabled = '';
+		}
+
+		wp_nonce_field( 'save-feed-item-featured', '_wnpa_featured_nonce' );
 		?>
-		<select name="feed_item_featured">
+		<select name="feed_item_featured" <?php echo $disabled; ?>>
 			<option value="featured" <?php selected( 'featured', $featured_status ); ?>>Featured</option>
 			<option value="normal" <?php selected( 'normal', $featured_status ); ?>>Not Featured</option>
 		</select>
+		<?php
+	}
+
+	/**
+	 * Display a meta box to capture manual entry information for a feed item.
+	 *
+	 * @param WP_Post $post Current post being edited.
+	 */
+	public function display_byline_meta_box( $post ) {
+		$item_source = get_post_meta( $post->ID, '_feed_item_source_manual', true );
+		$item_author = get_post_meta( $post->ID, '_feed_item_author', true );
+
+		wp_nonce_field( 'save-feed-item-byline', '_wnpa_byline_nonce' );
+		?>
+		<label for="feed_item_author">Feed Item Author:</label>
+		<input name="feed_item_author" type="text" id="feed_item_author" value="<?php echo esc_attr( $item_author ); ?>" />
+		<br />
+		<label for="feed_item_source">Feed Item Source:</label>
+		<input name="feed_item_source" type="text" id="feed_item_source" value="<?php echo esc_attr( $item_source ); ?>" />
 		<?php
 	}
 
@@ -194,17 +222,40 @@ class WNPA_Feed_Item {
 			return;
 		}
 
-		if ( ! isset( $_POST['feed_item_featured'] ) ) {
-			return;
+		if ( isset( $_POST['_wnpa_featured_nonce'] ) && wp_verify_nonce( $_POST['_wnpa_featured_nonce'], 'save-feed-item-featured' ) && isset( $_POST['feed_item_featured'] ) ) {
+			if ( !in_array( $_POST[ 'feed_item_featured' ], array( 'normal', 'featured' ) ) ) {
+				$featured_status = 'normal';
+			} else {
+				$featured_status = $_POST[ 'feed_item_featured' ];
+			}
+
+			if ( current_user_can( 'administrator' ) ) {
+				update_post_meta( $post_id, '_wnpa_featured_article', $featured_status );
+			}
 		}
 
-		if ( ! in_array( $_POST['feed_item_featured'], array( 'normal', 'featured' ) ) ) {
-			$featured_status = 'normal';
-		} else {
-			$featured_status = $_POST['feed_item_featured'];
+		if ( 'publish' === $post->post_status ) {
+			$terms = wp_get_post_terms( $post_id, $this->item_visibility_taxonomy );
+			if ( empty( $terms ) ) {
+				wp_set_object_terms( $post_id, 'Public', $this->item_visibility_taxonomy );
+			}
 		}
 
-		update_post_meta( $post_id, '_wnpa_featured_article', $featured_status );
+		if ( isset( $_POST['_wnpa_byline_nonce'] ) && wp_verify_nonce( $_POST['_wnpa_byline_nonce'], 'save-feed-item-byline' ) ) {
+			if ( isset( $_POST['feed_item_source'] ) ) {
+				$source = esc_html( $_POST['feed_item_source'] );
+				if ( ! empty( $source ) ) {
+					update_post_meta( $post_id, '_feed_item_source_manual', $source );
+				}
+			}
+
+			if ( isset( $_POST['feed_item_author'] ) ) {
+				$author = esc_html( $_POST['feed_item_author'] );
+				if ( ! empty( $author ) ) {
+					update_post_meta( $post_id, '_feed_item_author', $author );
+				}
+			}
+		}
 	}
 
 	/**
@@ -341,11 +392,16 @@ class WNPA_Feed_Item {
 	public function manage_posts_custom_column( $column_name, $post_id ) {
 		if ( 'item_source' === $column_name ) {
 			$source_id = get_post_meta( $post_id, '_feed_item_source', true );
-			if ( $source_id ) {
-				$source = get_post( absint( $source_id ) );
+			if ( absint( $source_id ) > 0 ) {
+				$source = get_post( $source_id );
 				echo '<a href="' . esc_url( admin_url( 'post.php?post=' . $source_id . '&action=edit' ) ) . '">' . esc_html( $source->post_title ) . '</a>';
 			} else {
-				echo 'Manual entry';
+				$source = get_post_meta( $post_id, '_feed_item_source_manual', true );
+				if ( ! empty( $source ) ) {
+					echo esc_html( $source );
+				} else {
+					echo 'Manual entry';
+				}
 			}
 		}
 
