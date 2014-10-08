@@ -60,6 +60,15 @@ class WNPA_Feed_Item {
 	 * feed items across multiple publishers.
 	 */
 	public function register_post_type() {
+		$default_post_type_slug = $this->item_content_type;
+
+		// Allow plugins or themes to override the default content type.
+		$this->item_content_type = apply_filters( 'wnpa_content_type', $this->item_content_type );
+
+		if ( $default_post_type_slug !== $this->item_content_type ) {
+			return;
+		}
+
 		$labels = array(
 			'name'               => 'Feed Items',
 			'singular_name'      => 'Feed Item',
