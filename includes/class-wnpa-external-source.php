@@ -292,6 +292,11 @@ class WNPA_External_Source {
 				$visibility = $feed_item->get_item_tags( SIMPLEPIE_NAMESPACE_DC_11, 'accessRights' );
 				$categories = $feed_item->get_categories();
 
+				// SimplePie returns `null` rather than an empty array if no categories are found.
+				if ( ! $categories ) {
+					$categories = array();
+				}
+
 				$locations = $default_source_location;
 				$tags      = array();
 				// Split the provided categories into tags and locations.
