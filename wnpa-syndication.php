@@ -4,8 +4,8 @@
  * Plugin URI: https://github.com/washingtonstateuniversity/wnpa-syndication
  * Description: Manage and republish content from multiple external sources into a single consumable feed.
  * Author: washingtonstateuniversity, jeremyfelt
- * Version 0.3.1
- * Author URI: http://web.wsu.edu/
+ * Version 0.3.2
+ * Author URI: https://web.wsu.edu/
  * Text Domain: wnpa-syndication
  */
 
