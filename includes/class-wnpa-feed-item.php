@@ -37,6 +37,8 @@ class WNPA_Feed_Item {
 		add_filter( 'wp_dropdown_cats', array( $this, 'selective_taxonomy_dropdown' ), 10, 1 );
 		add_filter( 'manage_wnpa_feed_item_posts_columns', array( $this, 'manage_posts_columns' ), 10, 1 );
 		add_action( 'manage_wnpa_feed_item_posts_custom_column', array( $this, 'manage_posts_custom_column' ), 10, 2 );
+
+		add_action( 'post_submitbox_misc_actions', array( $this, 'submitbox_publish_item' ) );
 	}
 
 	/**
@@ -446,6 +448,58 @@ class WNPA_Feed_Item {
 		if ( in_array( get_current_screen()->id, array( 'wnpa_feed_item', 'edit-wnpa_feed_item' ), true ) ) {
 			wp_enqueue_style( 'wnpa-feed-item-list', plugins_url( '../css/feed-item.css', __FILE__ ) );
 		}
+	}
+
+	/**
+	 * Retrieve the corresponding post ID of a feed item.
+	 *
+	 * @since 1.0.0
+	 * @global wpdb $wpdb
+	 *
+	 * @param int $post_id ID of the feed item.
+	 *
+	 * @return int|bool The ID of the corresponding post if available. False if not.
+	 */
+	public static function get_feed_item_post_id( $post_id ) {
+		global $wpdb;
+
+		$feed_item_unique_hash = get_post_meta( $post_id, '_feed_item_unique_hash', true );
+		$existing_item_id = $wpdb->get_var( $wpdb->prepare( "SELECT $wpdb->postmeta.post_id FROM $wpdb->postmeta WHERE $wpdb->postmeta.meta_key = '_feed_item_unique_hash' AND $wpdb->postmeta.meta_value = %s AND $wpdb->postmeta.post_id <> %d", $feed_item_unique_hash, $post_id ) );
+
+		if ( 0 < absint( $existing_item_id ) ) {
+			return $existing_item_id;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Display an option to publish a feed item as a post on the site. If the item is already
+	 * published as a post, show a link to edit that post instead.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param WP_Post $post
+	 */
+	public function submitbox_publish_item( $post ) {
+		$existing_item_id = self::get_feed_item_post_id( $post->ID );
+
+		if ( empty( $existing_item_id ) ) {
+			?>
+			<div class="misc-pub-section misc-pub-visibility">
+				<input type="checkbox" id="publish-feed-item" name="publish_feed_item" value="yes"><label for="publish-feed-item">Publish feed item as post</label>
+			</div>
+			<?php
+		} else {
+
+			$edit_url = get_edit_post_link( $existing_item_id );
+			?>
+			<div class="misc-pub-section misc-pub-visibility">
+				<a href="<?php echo esc_url( $edit_url ); ?>">Edit corresponding post.</a>
+			</div>
+			<?php
+		}
+
 	}
 }
 global $wnpa_feed_item;
