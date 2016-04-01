@@ -1,5 +1,7 @@
 # WNPA Syndication
 
+[![Build Status](https://travis-ci.org/washingtonstateuniversity/WNPA-Syndication.svg?branch=master)](https://travis-ci.org/washingtonstateuniversity/WNPA-Syndication)
+
 WNPA Syndication is a [WordPress](http://wordpress.org) plugin used to manage and republish content from multiple external sources into a single consumable feed.
 
 ## Overview
