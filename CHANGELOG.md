@@ -1,4 +1,8 @@
-# Changelog
+# Publish Feed Items Changelog
+
+## 1.0.0 (TBD)
+
+* Rename plugin from WNPA Syndication to Publish Feed Items to better fit mission.
 
 ## 0.3.2 (April 9, 2015)
 
