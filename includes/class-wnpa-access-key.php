@@ -18,12 +18,12 @@ class WNPA_Access_Key {
 	var $query_var = 'access_key';
 
 	public function __construct() {
-		add_action( 'show_user_profile',                array( $this, 'user_profile_show_key' ), 10    );
-		add_action( 'admin_enqueue_scripts',            array( $this, 'admin_enqueue_scripts' ), 10    );
-		add_action( 'wp_ajax_wnpa_generate_access_key', array( $this, 'generate_access_key'   ), 10    );
-		add_action( 'personal_options_update',          array( $this, 'update_profile'        ), 10, 1 );
+		add_action( 'show_user_profile', array( $this, 'user_profile_show_key' ), 10 );
+		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ), 10 );
+		add_action( 'wp_ajax_wnpa_generate_access_key', array( $this, 'generate_access_key' ), 10 );
+		add_action( 'personal_options_update', array( $this, 'update_profile' ), 10, 1 );
 
-		add_filter( 'query_vars',                       array( $this, 'filter_query_vars'  ), 10, 1 );
+		add_filter( 'query_vars', array( $this, 'filter_query_vars' ), 10, 1 );
 	}
 
 	/**
@@ -70,6 +70,7 @@ class WNPA_Access_Key {
 			$feed_url = add_query_arg( $this->query_var, $access_key, $feed_url );
 		}
 
+		wp_nonce_field( 'save_wnpa_access_key', '_wsuwp_pfi_access_key' );
 		?>
 		<h3>WNPA Access Information:</h3>
 		<table class="form-table">
@@ -97,6 +98,10 @@ class WNPA_Access_Key {
 	 * @param int $user_id User ID of the profile being updated.
 	 */
 	public function update_profile( $user_id ) {
+		if ( ! isset( $_POST['_wsuwp_pfi_access_key'] ) || ! wp_verify_nonce( $_POST['_wsuwp_pfi_access_key'], 'save_wnpa_access_key' ) ) {
+			return;
+		}
+
 		if ( empty( $_POST['access_key'] ) ) {
 			return;
 		}

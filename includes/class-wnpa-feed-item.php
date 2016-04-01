@@ -22,19 +22,19 @@ class WNPA_Feed_Item {
 	var $item_content_type = 'wnpa_feed_item';
 
 	public function __construct() {
-		add_action( 'init',             array( $this, 'register_post_type'           ), 10    );
-		add_action( 'init',             array( $this, 'register_taxonomy_visibility' ), 10    );
-		add_action( 'init',             array( $this, 'register_taxonomy_location'   ), 10    );
+		add_action( 'init', array( $this, 'register_post_type' ), 10 );
+		add_action( 'init', array( $this, 'register_taxonomy_visibility' ), 10 );
+		add_action( 'init', array( $this, 'register_taxonomy_location' ), 10 );
 		add_action( 'wp', array( $this, 'feed_item_view' ), 10 );
 		add_action( 'add_meta_boxes', array( $this, 'add_meta_boxes' ), 10, 2 );
 		add_action( 'save_post', array( $this, 'save_post' ), 10, 2 );
-		add_action( 'rss2_item',        array( $this, 'rss_item_visibility'          ), 10    );
+		add_action( 'rss2_item', array( $this, 'rss_item_visibility' ), 10 );
 		add_action( 'rss2_item', array( $this, 'rss_item_media_thumbnail' ), 10 );
-		add_action( 'pre_get_posts',    array( $this, 'modify_feed_query'            ), 10    );
+		add_action( 'pre_get_posts', array( $this, 'modify_feed_query' ), 10 );
 		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ), 10 );
 
-		add_filter( 'the_category_rss', array( $this, 'rss_category_location'        ), 10, 1 );
-		add_filter( 'wp_dropdown_cats', array( $this, 'selective_taxonomy_dropdown'  ), 10, 1 );
+		add_filter( 'the_category_rss', array( $this, 'rss_category_location' ), 10, 1 );
+		add_filter( 'wp_dropdown_cats', array( $this, 'selective_taxonomy_dropdown' ), 10, 1 );
 		add_filter( 'manage_wnpa_feed_item_posts_columns', array( $this, 'manage_posts_columns' ), 10, 1 );
 		add_action( 'manage_wnpa_feed_item_posts_custom_column', array( $this, 'manage_posts_custom_column' ), 10, 2 );
 	}
@@ -48,7 +48,7 @@ class WNPA_Feed_Item {
 	 * @return string Modified output for dropdown taxonomy list.
 	 */
 	public function selective_taxonomy_dropdown( $output ) {
-		if ( $this->item_content_type !== get_current_screen()->id ) {
+		if ( get_current_screen()->id !== $this->item_content_type ) {
 			return $output;
 		}
 
@@ -81,7 +81,7 @@ class WNPA_Feed_Item {
 			'search_items'       => 'Search Feed Items',
 			'not_found'          => 'No feed items found',
 			'not_found_in_trash' => 'No feed items found in Trash',
-			'menu_name'          => 'Feed Items'
+			'menu_name'          => 'Feed Items',
 		);
 
 		$args = array(
@@ -96,7 +96,7 @@ class WNPA_Feed_Item {
 			'has_archive'        => 'feed-items',
 			'hierarchical'       => false,
 			'supports'           => array( 'title', 'editor', 'excerpt', 'thumbnail' ),
-			'taxonomies'         => array( 'post_tag', 'category' )
+			'taxonomies'         => array( 'post_tag', 'category' ),
 		);
 
 		register_post_type( $this->item_content_type, $args );
@@ -232,10 +232,10 @@ class WNPA_Feed_Item {
 		}
 
 		if ( isset( $_POST['_wnpa_featured_nonce'] ) && wp_verify_nonce( $_POST['_wnpa_featured_nonce'], 'save-feed-item-featured' ) && isset( $_POST['feed_item_featured'] ) ) {
-			if ( !in_array( $_POST[ 'feed_item_featured' ], array( 'normal', 'featured' ) ) ) {
+			if ( ! in_array( $_POST['feed_item_featured'], array( 'normal', 'featured' ), true ) ) {
 				$featured_status = 'normal';
 			} else {
-				$featured_status = $_POST[ 'feed_item_featured' ];
+				$featured_status = $_POST['feed_item_featured'];
 			}
 
 			if ( current_user_can( 'administrator' ) ) {
@@ -319,7 +319,7 @@ class WNPA_Feed_Item {
 
 		$locations = get_the_terms( $post->ID, $this->item_location_taxonomy );
 
-		if ( empty( $locations) || is_wp_error( $locations ) ) {
+		if ( empty( $locations ) || is_wp_error( $locations ) ) {
 			return $rss_category_list;
 		}
 
@@ -362,7 +362,7 @@ class WNPA_Feed_Item {
 					'taxonomy' => 'wnpa_item_visibility',
 					'field' => 'name',
 					'terms' => 'Public',
-				)
+				),
 			);
 			$query->set( 'tax_query', $public_query );
 		}
@@ -417,7 +417,7 @@ class WNPA_Feed_Item {
 		if ( 'item_location' === $column_name ) {
 			$item_locations = wp_get_object_terms( $post_id, $this->item_location_taxonomy );
 			$locations = array();
-			foreach( $item_locations as $item_location ) {
+			foreach ( $item_locations as $item_location ) {
 				$locations[] = '<a href="' . esc_url( admin_url( 'edit.php?wnpa_item_location=' . $item_location->slug . '&post_type=wnpa_feed_item' ) ) . '">'. $item_location->name . '</a>';
 			}
 
@@ -443,7 +443,7 @@ class WNPA_Feed_Item {
 	}
 
 	public function admin_enqueue_scripts() {
-		if ( in_array( get_current_screen()->id, array( 'wnpa_feed_item', 'edit-wnpa_feed_item' ) ) ) {
+		if ( in_array( get_current_screen()->id, array( 'wnpa_feed_item', 'edit-wnpa_feed_item' ), true ) ) {
 			wp_enqueue_style( 'wnpa-feed-item-list', plugins_url( '../css/feed-item.css', __FILE__ ) );
 		}
 	}

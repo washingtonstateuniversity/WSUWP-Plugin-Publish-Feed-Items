@@ -26,12 +26,12 @@ class WNPA_External_Source {
 	 * Add hooks as the class is initialized.
 	 */
 	public function __construct() {
-		register_activation_hook(   dirname( dirname( __FILE__ ) ) . '/wnpa-syndication.php', array( $this, 'activate'   ) );
+		register_activation_hook( dirname( dirname( __FILE__ ) ) . '/wnpa-syndication.php', array( $this, 'activate' ) );
 		register_deactivation_hook( dirname( dirname( __FILE__ ) ) . '/wnpa-syndication.php', array( $this, 'deactivate' ) );
 
-		add_action( 'init',           array( $this, 'register_post_type' ) );
-		add_action( 'add_meta_boxes', array( $this, 'add_meta_boxes'     ), 10, 2 );
-		add_action( 'save_post',      array( $this, 'save_post'          ), 10, 2 );
+		add_action( 'init', array( $this, 'register_post_type' ) );
+		add_action( 'add_meta_boxes', array( $this, 'add_meta_boxes' ), 10, 2 );
+		add_action( 'save_post', array( $this, 'save_post' ), 10, 2 );
 
 		// Use the custom hook setup to handle our cron action.
 		add_action( $this->source_cron_hook, array( $this, 'batch_external_sources' ) );
@@ -70,7 +70,7 @@ class WNPA_External_Source {
 			'search_items'       => 'Search External Sources',
 			'not_found'          => 'No external sources found',
 			'not_found_in_trash' => 'No external sources found in Trash',
-			'menu_name'          => 'External Sources'
+			'menu_name'          => 'External Sources',
 		);
 
 		$args = array(
@@ -139,6 +139,8 @@ class WNPA_External_Source {
 		$feed_last_total  = get_post_meta( $post->ID, '_wnpa_feed_last_total',    true );
 		$feed_last_count  = get_post_meta( $post->ID, '_wnpa_feed_last_count',    true );
 		$feed_last_status = get_post_meta( $post->ID, '_wnpa_feed_last_status',   true );
+
+		wp_nonce_field( 'save_external_source_url', '_wsuwp_pfi_external_source_nonce' );
 		?>
 		<h2>Feed URL:</h2>
 		<input type="text" value="<?php echo esc_attr( $external_source ); ?>" name="wnpa_source_url" class="widefat" />
@@ -146,7 +148,7 @@ class WNPA_External_Source {
 	    <ul>
 			<?php if ( $source_status ) : ?><li><strong>URL Check:</strong> <?php echo esc_html( $source_status ); ?></li><?php endif; ?>
 			<?php if ( $feed_response ) : ?><li><strong>Feed Response:</strong> <?php echo esc_html( $feed_response ); ?></li><?php endif; ?>
-			<?php if ( $feed_last_status )   : ?><li><strong>Feed Status:</strong> Last checked on <?php echo date( 'D, d M Y h:i:s', $feed_last_status + ( get_option( 'gmt_offset' ) * HOUR_IN_SECONDS )  ); ?></li><?php endif; ?>
+			<?php if ( $feed_last_status ) : ?><li><strong>Feed Status:</strong> Last checked on <?php echo date( 'D, d M Y h:i:s', $feed_last_status + ( get_option( 'gmt_offset' ) * HOUR_IN_SECONDS ) ); ?></li><?php endif; ?>
 			<?php if ( false !== $feed_last_total ) : ?><li><strong>Feed Items:</strong> Pulled <?php echo absint( $feed_last_total ); ?> items, <?php echo absint( $feed_last_count ); ?> were new.</li><?php endif; ?>
 		</ul>
 		<?php
@@ -171,18 +173,24 @@ class WNPA_External_Source {
 			return;
 		}
 
+		if ( ! isset( $_POST['_wsuwp_pfi_external_source_nonce'] ) || false === wp_verify_nonce( $_POST['_wsuwp_pfi_external_source_nonce'], 'save_external_source_url' ) ) {
+			return;
+		}
+
 		if ( ! isset( $_POST['wnpa_source_url'] ) ) {
 			return;
 		}
 
+		$external_source_url = $_POST['wnpa_source_url'];
+
 		// Attempt a HEAD request to the specified URL for current status info.
-		$head_response = wp_remote_head( esc_url( $_POST['wnpa_source_url'] ) );
+		$head_response = wp_remote_head( esc_url( $external_source_url ) );
 
 		if ( is_wp_error( $head_response ) ) {
 			$response_meta = $head_response->get_error_message();
 		} else {
-			$response_code = wp_remote_retrieve_response_code( $head_response );
-			if ( in_array( $response_code, array( 301, 302 ) ) ) {
+			$response_code = absint( wp_remote_retrieve_response_code( $head_response ) );
+			if ( in_array( $response_code, array( 301, 302 ), true ) ) {
 				$response_meta = 'OK, but a redirect was made. Suggested change: ' . esc_url( $head_response['headers']['location'] );
 			} else {
 				$response_meta = wp_remote_retrieve_response_message( $head_response );
@@ -190,13 +198,13 @@ class WNPA_External_Source {
 		}
 
 		update_post_meta( $post_id, '_wnpa_source_status', sanitize_text_field( $response_meta ) );
-		update_post_meta( $post_id, $this->source_url_meta_key, esc_url_raw( $_POST['wnpa_source_url'] ) );
+		update_post_meta( $post_id, $this->source_url_meta_key, esc_url_raw( $external_source_url ) );
 
 		// When an external source is published, immediately consume the feed.
 		if ( 'publish' === $post->post_status ) {
-			$this->_consume_external_source( esc_url( $_POST['wnpa_source_url'] ), $post_id );
-		} elseif ( in_array( $post->post_status, array( 'draft', 'future' ) ) ) {
-			$this->_consume_external_source( esc_url( $_POST['wnpa_source_url'] ), $post_id, false );
+			$this->_consume_external_source( esc_url( $external_source_url ), $post_id );
+		} elseif ( in_array( $post->post_status, array( 'draft', 'future' ), true ) ) {
+			$this->_consume_external_source( esc_url( $external_source_url ), $post_id, false );
 		}
 	}
 
@@ -215,7 +223,7 @@ class WNPA_External_Source {
 		$query = new WP_Query( $query_args );
 
 		// If our query didn't return any items, we can bail.
-		if ( ! isset( $query->posts ) || empty( $query->posts) ) {
+		if ( ! isset( $query->posts ) || empty( $query->posts ) ) {
 			return;
 		}
 
@@ -352,7 +360,7 @@ class WNPA_External_Source {
 				 */
 				if ( empty( $visibility[0]['data'] ) ) {
 					$visibility = 'public';
-				} else if ( ! in_array( $visibility[0]['data'], array( 'public', 'private' ) ) ) {
+				} else if ( ! in_array( $visibility[0]['data'], array( 'public', 'private' ), true ) ) {
 					$visibility = 'private';
 				} else {
 					$visibility = $visibility[0]['data'];
