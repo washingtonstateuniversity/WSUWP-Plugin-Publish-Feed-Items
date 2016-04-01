@@ -26,12 +26,12 @@ class WNPA_External_Source {
 	 * Add hooks as the class is initialized.
 	 */
 	public function __construct() {
-		register_activation_hook(   dirname( dirname( __FILE__ ) ) . '/wnpa-syndication.php', array( $this, 'activate'   ) );
+		register_activation_hook( dirname( dirname( __FILE__ ) ) . '/wnpa-syndication.php', array( $this, 'activate' ) );
 		register_deactivation_hook( dirname( dirname( __FILE__ ) ) . '/wnpa-syndication.php', array( $this, 'deactivate' ) );
 
-		add_action( 'init',           array( $this, 'register_post_type' ) );
-		add_action( 'add_meta_boxes', array( $this, 'add_meta_boxes'     ), 10, 2 );
-		add_action( 'save_post',      array( $this, 'save_post'          ), 10, 2 );
+		add_action( 'init', array( $this, 'register_post_type' ) );
+		add_action( 'add_meta_boxes', array( $this, 'add_meta_boxes' ), 10, 2 );
+		add_action( 'save_post', array( $this, 'save_post' ), 10, 2 );
 
 		// Use the custom hook setup to handle our cron action.
 		add_action( $this->source_cron_hook, array( $this, 'batch_external_sources' ) );
@@ -70,7 +70,7 @@ class WNPA_External_Source {
 			'search_items'       => 'Search External Sources',
 			'not_found'          => 'No external sources found',
 			'not_found_in_trash' => 'No external sources found in Trash',
-			'menu_name'          => 'External Sources'
+			'menu_name'          => 'External Sources',
 		);
 
 		$args = array(
@@ -146,7 +146,7 @@ class WNPA_External_Source {
 	    <ul>
 			<?php if ( $source_status ) : ?><li><strong>URL Check:</strong> <?php echo esc_html( $source_status ); ?></li><?php endif; ?>
 			<?php if ( $feed_response ) : ?><li><strong>Feed Response:</strong> <?php echo esc_html( $feed_response ); ?></li><?php endif; ?>
-			<?php if ( $feed_last_status )   : ?><li><strong>Feed Status:</strong> Last checked on <?php echo date( 'D, d M Y h:i:s', $feed_last_status + ( get_option( 'gmt_offset' ) * HOUR_IN_SECONDS )  ); ?></li><?php endif; ?>
+			<?php if ( $feed_last_status ) : ?><li><strong>Feed Status:</strong> Last checked on <?php echo date( 'D, d M Y h:i:s', $feed_last_status + ( get_option( 'gmt_offset' ) * HOUR_IN_SECONDS ) ); ?></li><?php endif; ?>
 			<?php if ( false !== $feed_last_total ) : ?><li><strong>Feed Items:</strong> Pulled <?php echo absint( $feed_last_total ); ?> items, <?php echo absint( $feed_last_count ); ?> were new.</li><?php endif; ?>
 		</ul>
 		<?php
@@ -215,7 +215,7 @@ class WNPA_External_Source {
 		$query = new WP_Query( $query_args );
 
 		// If our query didn't return any items, we can bail.
-		if ( ! isset( $query->posts ) || empty( $query->posts) ) {
+		if ( ! isset( $query->posts ) || empty( $query->posts ) ) {
 			return;
 		}
 
