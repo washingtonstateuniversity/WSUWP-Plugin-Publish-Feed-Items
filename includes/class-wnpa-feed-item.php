@@ -232,7 +232,7 @@ class WNPA_Feed_Item {
 		}
 
 		if ( isset( $_POST['_wnpa_featured_nonce'] ) && wp_verify_nonce( $_POST['_wnpa_featured_nonce'], 'save-feed-item-featured' ) && isset( $_POST['feed_item_featured'] ) ) {
-			if ( ! in_array( $_POST['feed_item_featured'], array( 'normal', 'featured' ) ) ) {
+			if ( ! in_array( $_POST['feed_item_featured'], array( 'normal', 'featured' ), true ) ) {
 				$featured_status = 'normal';
 			} else {
 				$featured_status = $_POST['feed_item_featured'];
@@ -443,7 +443,7 @@ class WNPA_Feed_Item {
 	}
 
 	public function admin_enqueue_scripts() {
-		if ( in_array( get_current_screen()->id, array( 'wnpa_feed_item', 'edit-wnpa_feed_item' ) ) ) {
+		if ( in_array( get_current_screen()->id, array( 'wnpa_feed_item', 'edit-wnpa_feed_item' ), true ) ) {
 			wp_enqueue_style( 'wnpa-feed-item-list', plugins_url( '../css/feed-item.css', __FILE__ ) );
 		}
 	}

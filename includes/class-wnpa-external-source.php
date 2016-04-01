@@ -181,8 +181,8 @@ class WNPA_External_Source {
 		if ( is_wp_error( $head_response ) ) {
 			$response_meta = $head_response->get_error_message();
 		} else {
-			$response_code = wp_remote_retrieve_response_code( $head_response );
-			if ( in_array( $response_code, array( 301, 302 ) ) ) {
+			$response_code = absint( wp_remote_retrieve_response_code( $head_response ) );
+			if ( in_array( $response_code, array( 301, 302 ), true ) ) {
 				$response_meta = 'OK, but a redirect was made. Suggested change: ' . esc_url( $head_response['headers']['location'] );
 			} else {
 				$response_meta = wp_remote_retrieve_response_message( $head_response );
@@ -195,7 +195,7 @@ class WNPA_External_Source {
 		// When an external source is published, immediately consume the feed.
 		if ( 'publish' === $post->post_status ) {
 			$this->_consume_external_source( esc_url( $_POST['wnpa_source_url'] ), $post_id );
-		} elseif ( in_array( $post->post_status, array( 'draft', 'future' ) ) ) {
+		} elseif ( in_array( $post->post_status, array( 'draft', 'future' ), true ) ) {
 			$this->_consume_external_source( esc_url( $_POST['wnpa_source_url'] ), $post_id, false );
 		}
 	}
@@ -352,7 +352,7 @@ class WNPA_External_Source {
 				 */
 				if ( empty( $visibility[0]['data'] ) ) {
 					$visibility = 'public';
-				} else if ( ! in_array( $visibility[0]['data'], array( 'public', 'private' ) ) ) {
+				} else if ( ! in_array( $visibility[0]['data'], array( 'public', 'private' ), true ) ) {
 					$visibility = 'private';
 				} else {
 					$visibility = $visibility[0]['data'];
