@@ -70,6 +70,7 @@ class WNPA_Access_Key {
 			$feed_url = add_query_arg( $this->query_var, $access_key, $feed_url );
 		}
 
+		wp_nonce_field( 'save_wnpa_access_key', '_wsuwp_pfi_access_key' );
 		?>
 		<h3>WNPA Access Information:</h3>
 		<table class="form-table">
@@ -97,6 +98,10 @@ class WNPA_Access_Key {
 	 * @param int $user_id User ID of the profile being updated.
 	 */
 	public function update_profile( $user_id ) {
+		if ( ! isset( $_POST['_wsuwp_pfi_access_key'] ) || ! wp_verify_nonce( $_POST['_wsuwp_pfi_access_key'], 'save_wnpa_access_key' ) ) {
+			return;
+		}
+
 		if ( empty( $_POST['access_key'] ) ) {
 			return;
 		}

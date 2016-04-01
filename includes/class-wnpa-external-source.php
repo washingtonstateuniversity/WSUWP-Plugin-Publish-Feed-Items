@@ -139,6 +139,8 @@ class WNPA_External_Source {
 		$feed_last_total  = get_post_meta( $post->ID, '_wnpa_feed_last_total',    true );
 		$feed_last_count  = get_post_meta( $post->ID, '_wnpa_feed_last_count',    true );
 		$feed_last_status = get_post_meta( $post->ID, '_wnpa_feed_last_status',   true );
+
+		wp_nonce_field( 'save_external_source_url', '_wsuwp_pfi_external_source_nonce' );
 		?>
 		<h2>Feed URL:</h2>
 		<input type="text" value="<?php echo esc_attr( $external_source ); ?>" name="wnpa_source_url" class="widefat" />
@@ -171,12 +173,18 @@ class WNPA_External_Source {
 			return;
 		}
 
+		if ( ! isset( $_POST['_wsuwp_pfi_external_source_nonce'] ) || false === wp_verify_nonce( $_POST['_wsuwp_pfi_external_source_nonce'], 'save_external_source_url' ) ) {
+			return;
+		}
+
 		if ( ! isset( $_POST['wnpa_source_url'] ) ) {
 			return;
 		}
 
+		$external_source_url = $_POST['wnpa_source_url'];
+
 		// Attempt a HEAD request to the specified URL for current status info.
-		$head_response = wp_remote_head( esc_url( $_POST['wnpa_source_url'] ) );
+		$head_response = wp_remote_head( esc_url( $external_source_url ) );
 
 		if ( is_wp_error( $head_response ) ) {
 			$response_meta = $head_response->get_error_message();
@@ -190,13 +198,13 @@ class WNPA_External_Source {
 		}
 
 		update_post_meta( $post_id, '_wnpa_source_status', sanitize_text_field( $response_meta ) );
-		update_post_meta( $post_id, $this->source_url_meta_key, esc_url_raw( $_POST['wnpa_source_url'] ) );
+		update_post_meta( $post_id, $this->source_url_meta_key, esc_url_raw( $external_source_url ) );
 
 		// When an external source is published, immediately consume the feed.
 		if ( 'publish' === $post->post_status ) {
-			$this->_consume_external_source( esc_url( $_POST['wnpa_source_url'] ), $post_id );
+			$this->_consume_external_source( esc_url( $external_source_url ), $post_id );
 		} elseif ( in_array( $post->post_status, array( 'draft', 'future' ), true ) ) {
-			$this->_consume_external_source( esc_url( $_POST['wnpa_source_url'] ), $post_id, false );
+			$this->_consume_external_source( esc_url( $external_source_url ), $post_id, false );
 		}
 	}
 
