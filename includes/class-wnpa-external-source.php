@@ -18,39 +18,17 @@ class WNPA_External_Source {
 	var $source_url_meta_key = '_wnpa_source_url';
 
 	/**
-	 * @var string Hook used when firing our source consumption cron event.
-	 */
-	var $source_cron_hook    = 'wnpa_consume_source';
-
-	/**
 	 * Add hooks as the class is initialized.
 	 */
 	public function __construct() {
-		register_activation_hook( dirname( dirname( __FILE__ ) ) . '/wnpa-syndication.php', array( $this, 'activate' ) );
-		register_deactivation_hook( dirname( dirname( __FILE__ ) ) . '/wnpa-syndication.php', array( $this, 'deactivate' ) );
-
 		add_action( 'init', array( $this, 'register_post_type' ) );
 		add_action( 'add_meta_boxes', array( $this, 'add_meta_boxes' ), 10, 2 );
 		add_action( 'save_post', array( $this, 'save_post' ), 10, 2 );
 
 		// Use the custom hook setup to handle our cron action.
-		add_action( $this->source_cron_hook, array( $this, 'batch_external_sources' ) );
+		add_action( 'publish_feed_items_consume_sources', array( $this, 'batch_external_sources' ) );
 
 		add_filter( 'bulk_post_updated_messages', array( $this, 'bulk_post_updated_message' ), 10, 2 );
-	}
-
-	/**
-	 * Perform tasks that should occur only on plugin activation.
-	 */
-	public function activate() {
-		wp_schedule_event( time(), 'hourly', $this->source_cron_hook );
-	}
-
-	/**
-	 * Perform tasks that should occur only on plugin deactivation.
-	 */
-	public function deactivate() {
-		wp_clear_scheduled_hook( $this->source_cron_hook );
 	}
 
 	/**
