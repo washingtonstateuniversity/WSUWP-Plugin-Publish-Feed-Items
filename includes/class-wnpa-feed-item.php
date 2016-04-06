@@ -98,7 +98,7 @@ class WNPA_Feed_Item {
 			'capability_type'    => 'post',
 			'has_archive'        => 'feed-items',
 			'hierarchical'       => false,
-			'supports'           => array( 'title', 'editor', 'excerpt', 'thumbnail' ),
+			'supports'           => array( 'thumbnail' ),
 			'taxonomies'         => array( 'post_tag', 'category' ),
 		);
 
@@ -165,8 +165,25 @@ class WNPA_Feed_Item {
 			return;
 		}
 
+		add_meta_box( 'wsuwp_pfi_feed_item_content', esc_html( $post->post_title ), array( $this, 'display_feed_item_content_meta_box' ), $this->item_content_type, 'normal' );
 		add_meta_box( 'wnpa_featured_item', 'Featured Article', array( $this, 'display_featured_item_meta_box' ), $this->item_content_type, 'normal' );
 		add_meta_box( 'wnpa_byline', 'Byline Information', array( $this, 'display_byline_meta_box' ), $this->item_content_type, 'normal' );
+	}
+
+	/**
+	 * Display the title and content from a feed item. This replaces the standard title
+	 * and editor meta boxes.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param WP_Post $post
+	 */
+	public function display_feed_item_content_meta_box( $post ) {
+		?>
+		<div class="feed_item_content">
+			<?php echo apply_filters( 'the_content', wp_kses_post( $post->post_content ) ); ?>
+		</div>
+		<?php
 	}
 
 	/**
