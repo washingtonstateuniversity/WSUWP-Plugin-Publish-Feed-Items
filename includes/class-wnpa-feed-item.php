@@ -452,14 +452,14 @@ class WNPA_Feed_Item {
 	}
 
 	/**
-	 * Retrieve the corresponding post ID of a feed item.
+	 * Retrieve the corresponding post ID of a feed item or post associated with a feed item.
 	 *
 	 * @since 1.0.0
 	 * @global wpdb $wpdb
 	 *
-	 * @param int $post_id ID of the feed item.
+	 * @param int $post_id ID of the feed item or post.
 	 *
-	 * @return int|bool The ID of the corresponding post if available. False if not.
+	 * @return int|bool The ID of the corresponding post or feed item if available. False if not.
 	 */
 	public static function get_feed_item_post_id( $post_id ) {
 		global $wpdb;
