@@ -565,6 +565,7 @@ class WNPA_Feed_Item {
 		$new_post = (array) $post;
 		unset( $new_post['ID'] );
 		$new_post['post_type'] = 'post';
+		$new_post['post_status'] = 'draft';
 
 		$new_post_id = wp_insert_post( $new_post );
 
