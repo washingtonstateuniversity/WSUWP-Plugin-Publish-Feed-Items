@@ -159,6 +159,15 @@ class WNPA_External_Source {
 			return;
 		}
 
+		/**
+		 * If we've lost the cron event scheduled to consume external sources, then start
+		 * it up again 30 seconds in the future to account for the immediate consumption
+		 * of this new external source.
+		 */
+		if ( false === wp_next_scheduled( 'publish_feed_items_consume_sources' ) ) {
+			wp_schedule_event( time() + 30, 'hourly', 'publish_feed_items_consume_sources' );
+		}
+
 		$external_source_url = $_POST['wnpa_source_url'];
 
 		// Attempt a HEAD request to the specified URL for current status info.
