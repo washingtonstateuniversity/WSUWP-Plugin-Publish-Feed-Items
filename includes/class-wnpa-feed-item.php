@@ -89,8 +89,8 @@ class WNPA_Feed_Item {
 
 		$args = array(
 			'labels'             => $labels,
-			'public'             => true,
-			'publicly_queryable' => true,
+			'public'             => false,
+			'publicly_queryable' => false,
 			'show_ui'            => true,
 			'show_in_menu'       => true,
 			'query_var'          => true,
@@ -102,8 +102,19 @@ class WNPA_Feed_Item {
 			'taxonomies'         => array( 'post_tag', 'category' ),
 		);
 
-		register_post_type( $this->item_content_type, $args );
+		/**
+		 * Filter whether feed items should be public.
+		 *
+		 * @since 1.0.0
+		 *
+		 * @param bool $public Default false. True if feed items should be exposed at /feed-items/.
+		 */
+		if ( apply_filters( 'wsuwp_pfi_public_feed_items', false ) ) {
+			$args['public'] = true;
+			$args['publicly_queryable'] = true;
+		}
 
+		register_post_type( $this->item_content_type, $args );
 	}
 
 	/**
