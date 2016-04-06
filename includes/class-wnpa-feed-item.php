@@ -567,7 +567,15 @@ class WNPA_Feed_Item {
 		$new_post = (array) $post;
 		unset( $new_post['ID'] );
 		$new_post['post_type'] = 'post';
-		$new_post['post_status'] = 'draft';
+
+		/**
+		 * Filter the default post_status of the corresponding post for a feed item.
+		 *
+		 * @since 1.0.0
+		 *
+		 * @param string $post_status Default 'draft'.
+		 */
+		$new_post['post_status'] = apply_filters( 'wsuwp_pfi_default_post_status', 'draft' );
 
 		$new_post_id = wp_insert_post( $new_post );
 
