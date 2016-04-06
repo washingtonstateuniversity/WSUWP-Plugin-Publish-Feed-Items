@@ -4,6 +4,7 @@
 
 * Rename plugin from WNPA Syndication to Publish Feed Items to better fit mission.
 * Deprecate the `wnpa_content_type` filter. Only one unused theme was using this. Feed items can become posts through the submit meta box now.
+* Introduce the `wsuwp_pfi_public_feed_items` filter. This allows opt-in public feed items.
 
 ## 0.3.2 (April 9, 2015)
 
