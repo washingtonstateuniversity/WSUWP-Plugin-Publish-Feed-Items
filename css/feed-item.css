@@ -15,3 +15,7 @@
 #wnpa_item_visibility-tabs .hide-if-no-js {
 	display: none;
 }
+
+#post-body-content {
+	margin-bottom: 0;
+}

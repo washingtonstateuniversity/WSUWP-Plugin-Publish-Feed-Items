@@ -37,6 +37,9 @@ class WNPA_Feed_Item {
 		add_filter( 'wp_dropdown_cats', array( $this, 'selective_taxonomy_dropdown' ), 10, 1 );
 		add_filter( 'manage_wnpa_feed_item_posts_columns', array( $this, 'manage_posts_columns' ), 10, 1 );
 		add_action( 'manage_wnpa_feed_item_posts_custom_column', array( $this, 'manage_posts_custom_column' ), 10, 2 );
+
+		add_action( 'post_submitbox_misc_actions', array( $this, 'submitbox_publish_item' ) );
+		add_action( 'save_post', array( $this, 'save_post_submitbox_actions' ), 10, 2 );
 	}
 
 	/**
@@ -60,15 +63,6 @@ class WNPA_Feed_Item {
 	 * feed items across multiple publishers.
 	 */
 	public function register_post_type() {
-		$default_post_type_slug = $this->item_content_type;
-
-		// Allow plugins or themes to override the default content type.
-		$this->item_content_type = apply_filters( 'wnpa_content_type', $this->item_content_type );
-
-		if ( $default_post_type_slug !== $this->item_content_type ) {
-			return;
-		}
-
 		$labels = array(
 			'name'               => 'Feed Items',
 			'singular_name'      => 'Feed Item',
@@ -86,8 +80,8 @@ class WNPA_Feed_Item {
 
 		$args = array(
 			'labels'             => $labels,
-			'public'             => true,
-			'publicly_queryable' => true,
+			'public'             => false,
+			'publicly_queryable' => false,
 			'show_ui'            => true,
 			'show_in_menu'       => true,
 			'query_var'          => true,
@@ -95,12 +89,23 @@ class WNPA_Feed_Item {
 			'capability_type'    => 'post',
 			'has_archive'        => 'feed-items',
 			'hierarchical'       => false,
-			'supports'           => array( 'title', 'editor', 'excerpt', 'thumbnail' ),
+			'supports'           => array( 'thumbnail' ),
 			'taxonomies'         => array( 'post_tag', 'category' ),
 		);
 
-		register_post_type( $this->item_content_type, $args );
+		/**
+		 * Filter whether feed items should be public.
+		 *
+		 * @since 1.0.0
+		 *
+		 * @param bool $public Default false. True if feed items should be exposed at /feed-items/.
+		 */
+		if ( apply_filters( 'wsuwp_pfi_public_feed_items', false ) ) {
+			$args['public'] = true;
+			$args['publicly_queryable'] = true;
+		}
 
+		register_post_type( $this->item_content_type, $args );
 	}
 
 	/**
@@ -162,8 +167,25 @@ class WNPA_Feed_Item {
 			return;
 		}
 
+		add_meta_box( 'wsuwp_pfi_feed_item_content', esc_html( $post->post_title ), array( $this, 'display_feed_item_content_meta_box' ), $this->item_content_type, 'normal' );
 		add_meta_box( 'wnpa_featured_item', 'Featured Article', array( $this, 'display_featured_item_meta_box' ), $this->item_content_type, 'normal' );
 		add_meta_box( 'wnpa_byline', 'Byline Information', array( $this, 'display_byline_meta_box' ), $this->item_content_type, 'normal' );
+	}
+
+	/**
+	 * Display the title and content from a feed item. This replaces the standard title
+	 * and editor meta boxes.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param WP_Post $post
+	 */
+	public function display_feed_item_content_meta_box( $post ) {
+		?>
+		<div class="feed_item_content">
+			<?php echo apply_filters( 'the_content', wp_kses_post( $post->post_content ) ); ?>
+		</div>
+		<?php
 	}
 
 	/**
@@ -446,6 +468,124 @@ class WNPA_Feed_Item {
 		if ( in_array( get_current_screen()->id, array( 'wnpa_feed_item', 'edit-wnpa_feed_item' ), true ) ) {
 			wp_enqueue_style( 'wnpa-feed-item-list', plugins_url( '../css/feed-item.css', __FILE__ ) );
 		}
+	}
+
+	/**
+	 * Retrieve the corresponding post ID of a feed item or post associated with a feed item.
+	 *
+	 * @since 1.0.0
+	 * @global wpdb $wpdb
+	 *
+	 * @param int $post_id ID of the feed item or post.
+	 *
+	 * @return int|bool The ID of the corresponding post or feed item if available. False if not.
+	 */
+	public static function get_feed_item_post_id( $post_id ) {
+		global $wpdb;
+
+		$feed_item_unique_hash = get_post_meta( $post_id, '_feed_item_unique_hash', true );
+		$existing_item_id = $wpdb->get_var( $wpdb->prepare( "SELECT $wpdb->postmeta.post_id FROM $wpdb->postmeta WHERE $wpdb->postmeta.meta_key = '_feed_item_unique_hash' AND $wpdb->postmeta.meta_value = %s AND $wpdb->postmeta.post_id <> %d", $feed_item_unique_hash, $post_id ) );
+
+		if ( 0 < absint( $existing_item_id ) ) {
+			return $existing_item_id;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Display an option to publish a feed item as a post on the site. If the item is already
+	 * published as a post, show a link to edit that post instead.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param WP_Post $post
+	 */
+	public function submitbox_publish_item( $post ) {
+		$existing_item_id = self::get_feed_item_post_id( $post->ID );
+
+		if ( empty( $existing_item_id ) && $this->item_content_type === $post->post_type ) {
+			wp_nonce_field( 'wsuwp_publish_feed_item', '_wsuwp_publish_feed_item_nonce' );
+			?>
+			<div class="misc-pub-section misc-pub-visibility">
+				<input type="checkbox" id="publish-feed-item" name="publish_feed_item" value="yes"><label for="publish-feed-item">Publish feed item as post</label>
+			</div>
+			<?php
+		} elseif ( $this->item_content_type === $post->post_type ) {
+			$edit_url = get_edit_post_link( $existing_item_id );
+			?>
+			<div class="misc-pub-section misc-pub-visibility">
+				<a href="<?php echo esc_url( $edit_url ); ?>">Edit corresponding post.</a>
+			</div>
+			<?php
+		} elseif ( 'post' === $post->post_type ) {
+			$edit_url = get_edit_post_link( $existing_item_id );
+			?>
+			<div class="misc-pub-section misc-pub-visibility">
+				<a href="<?php echo esc_url( $edit_url ); ?>">Edit corresponding feed item.</a>
+			</div>
+			<?php
+		}
+
+	}
+
+	/**
+	 * When a feed item is updated, save any associated data we've captured in the submit box.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param int $post_id
+	 * @param WP_Post $post
+	 */
+	public function save_post_submitbox_actions( $post_id, $post ) {
+		if ( $this->item_content_type !== $post->post_type ) {
+			return;
+		}
+
+		if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
+			return;
+		}
+
+		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+			return;
+		}
+
+		if ( ! isset( $_POST['_wsuwp_publish_feed_item_nonce'] ) || ! wp_verify_nonce( $_POST['_wsuwp_publish_feed_item_nonce'], 'wsuwp_publish_feed_item' ) ) {
+			return;
+		}
+
+		if ( ! isset( $_POST['publish_feed_item'] ) || 'yes' !== $_POST['publish_feed_item'] ) {
+			return;
+		}
+
+		$feed_item_id = get_post_meta( $post_id, '_feed_item_unique_hash', true );
+
+		if ( strlen( $feed_item_id ) !== 32 ) {
+			return; // @todo an error should show or the hash should be recalculated.
+		}
+
+		$new_post = (array) $post;
+		unset( $new_post['ID'] );
+		$new_post['post_type'] = 'post';
+
+		/**
+		 * Filter the default post_status of the corresponding post for a feed item.
+		 *
+		 * @since 1.0.0
+		 *
+		 * @param string $post_status Default 'draft'.
+		 */
+		$new_post['post_status'] = apply_filters( 'wsuwp_pfi_default_post_status', 'draft' );
+
+		$new_post_id = wp_insert_post( $new_post );
+
+		if ( is_wp_error( $new_post_id ) ) {
+			return; // @todo an error should show here.
+		}
+
+		update_post_meta( $new_post_id, '_feed_item_unique_hash', $feed_item_id );
+
+		return;
 	}
 }
 global $wnpa_feed_item;
