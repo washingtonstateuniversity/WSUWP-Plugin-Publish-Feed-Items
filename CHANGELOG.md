@@ -1,6 +1,6 @@
 # Publish Feed Items Changelog
 
-## 1.0.0 (TBD)
+## 1.0.0 (April 11, 2016)
 
 * Rename plugin from WNPA Syndication to Publish Feed Items to better fit mission.
 * Deprecate the `wnpa_content_type` filter. Only one unused theme was using this. Feed items can become posts through the submit meta box now.
