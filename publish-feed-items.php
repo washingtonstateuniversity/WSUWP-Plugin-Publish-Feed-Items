@@ -4,7 +4,7 @@
  * Plugin URI: https://github.com/washingtonstateuniversity/wsuwp-plugin-publish-feed-items
  * Description: Manage and republish content from multiple external RSS feeds.
  * Author: washingtonstateuniversity, jeremyfelt
- * Version 1.0.0
+ * Version 1.0.1
  * Author URI: https://web.wsu.edu/
  * Text Domain: wsuwp-publish-feed-items
  */
