@@ -51,7 +51,7 @@ class PFI_Feed_Item {
 	 * @return string Modified output for dropdown taxonomy list.
 	 */
 	public function selective_taxonomy_dropdown( $output ) {
-		if ( get_current_screen()->id !== $this->item_content_type ) {
+		if ( function_exists( 'get_current_screen' ) && ( get_current_screen()->id !== $this->item_content_type ) ) {
 			return $output;
 		}
 
